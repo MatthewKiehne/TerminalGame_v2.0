@@ -13,6 +13,9 @@ public class TempSceneInit : MonoBehaviour {
     [SerializeField]
     private Sprite truthTableSprite;
 
+    [SerializeField]
+    private Sprite logicGraphControls;
+
 
     private void showComponent(GraphComponent component, Sprite sprite) {
 
@@ -235,6 +238,18 @@ public class TempSceneInit : MonoBehaviour {
         WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
 
         wm.spawnWindow(win);
+    }
+
+    public void logicGraphControlWindow() {
+
+        ImageContent testContents = new ImageContent(this.logicGraphControls);
+        Window win = new Window("All Terminals", 200, 200, false, testContents);
+
+        GameObject windowManagerGO = GameObject.Find("WindowManager");
+        WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
+
+        wm.spawnWindow(win);
+
     }
 
     public void clickLink(string str1, string str2, int num) {
