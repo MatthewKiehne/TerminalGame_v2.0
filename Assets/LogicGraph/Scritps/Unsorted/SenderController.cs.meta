@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 2dc67922363fe344483b038cc4f831ff
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - RayGOPrefab: {fileID: 5571757191319936215, guid: e192e639642b2f84891929bb3148e4e0,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
