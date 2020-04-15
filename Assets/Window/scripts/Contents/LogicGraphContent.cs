@@ -179,7 +179,6 @@ public class LogicGraphContent : WindowContent {
         deleteButton.onClick.AddListener(() => {
             this.currentState = EditorState.DeleteComponent;
             this.destroyMouseChildren();
-            Debug.Log(this.currentState);
             GameObject xSprite = this.makeX().gameObject;
             xSprite.transform.SetParent(this.mouseObject.transform);
             xSprite.transform.localPosition = new Vector2(.5f, .5f);
