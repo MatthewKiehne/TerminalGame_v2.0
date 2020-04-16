@@ -6,7 +6,7 @@ public class TConstant : TExtension {
 
     private int number;
 
-    public TConstant( int number) : base("Constant: " + number) {
+    public TConstant( int number, Vector2Int position) : base("Constant: " + number, position) {
         this.number = number;
 
         this.sendBridges.Add(new SendBridge(Vector2Int.zero, 0, false, 1, "Constant Output"));

@@ -55,13 +55,13 @@ public class TempSceneInit : MonoBehaviour {
 
         //Sprite sprite = Resources.Load<Sprite>("Sprites/LogicGates/And");
 
-        Terminal firstTerminal = new Terminal("First Test Terminal", 0, 0);
+        Terminal firstTerminal = new Terminal("First Test Terminal");
 
         Clock newClock = new Clock(5, 0, true, true);
         firstTerminal.Clock = newClock;
 
-        LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph");
-        LogicGraph testGraph = new LogicGraph(100, 100, "Test Graph");
+        LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph",Vector2Int.zero);
+        LogicGraph testGraph = new LogicGraph(100, 100, "Test Graph", Vector2Int.zero);
 
         testGraph.addComponent(new NotGate(new Vector2Int(1, 4), 0, false));
         testGraph.addComponent(new NotGate(new Vector2Int(1, 1), 0, false));
@@ -70,12 +70,12 @@ public class TempSceneInit : MonoBehaviour {
         firstTerminal.addExtension(testGraph);
         firstTerminal.addExtension(emptyGraph);
 
-        Terminal secondTerminal = new Terminal("Second Terminal", 0, 0);
-        secondTerminal.addExtension(new LogicGraph(20, 20, "Mini Graph"));
+        Terminal secondTerminal = new Terminal("Second Terminal");
+        secondTerminal.addExtension(new LogicGraph(20, 20, "Mini Graph", Vector2Int.zero));
 
-        Terminal emptyTerminal = new Terminal("Blank Graphs", 0, 0);
+        Terminal emptyTerminal = new Terminal("Blank Graphs");
         for(int i = 0; i < 10; i++) {
-            LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1));
+            LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1), Vector2Int.zero);
             emptyTerminal.addExtension(tempEmptyGraph);
         }
 

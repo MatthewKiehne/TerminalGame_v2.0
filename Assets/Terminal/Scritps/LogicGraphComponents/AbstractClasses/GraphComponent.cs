@@ -4,23 +4,23 @@ using UnityEngine;
 
 public abstract class GraphComponent {
 
-    public enum ComponentCategory { Logic, Passive, Bridge}
+    //public enum ComponentCategory { Logic, Passive, Bridge}
 
     private Vector2Int position;
     private Vector2Int size;
     private int rotaiton;
     private bool flipped;
 
-    private ComponentCategory compType;
+    //private ComponentCategory compType;
 
     protected List<ComponentPiece> componentPieces = new List<ComponentPiece>();
 
-    public GraphComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, ComponentCategory type) {
+    public GraphComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped) {
         this.position = position;
         this.size = size;
         this.rotaiton = rotation;
         this.flipped = flipped;
-        this.compType = type;
+        //this.compType = type;
     }
 
     public Rect getDimentions() {
@@ -64,9 +64,11 @@ public abstract class GraphComponent {
         }
     }
 
+    /*
     public ComponentCategory ComponentType {
         get {
             return this.compType;
         }
     }
+    */
 }

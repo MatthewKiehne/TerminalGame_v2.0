@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terminal : Item{
+public class Terminal : GraphInteger<TExtension>{
 
     
-    private int x;
-    private int y;
+
 
     private Clock clock;
 
     private List<TExtension> extensions = new List<TExtension>();
 
-    public Terminal(string name, int x, int y) : base(name) {
-        this.x = x;
-        this.y = y;
+    private string name;
+
+    public Terminal(string name) {
+        this.name = name;
     }
 
     public int updateTime(float timePassed) {
@@ -64,9 +64,32 @@ public class Terminal : Item{
         return this.extensions.Count;
     }
 
+    
     public void addExtension(TExtension extension) {
         this.extensions.Add(extension);
     }
+
+    #region GraphInteger
+    public bool addComponent(TExtension component) {
+        throw new System.NotImplementedException();
+    }
+
+    public bool removeComponent(TExtension component) {
+        throw new System.NotImplementedException();
+    }
+
+    public bool canPlace(TExtension component) {
+        throw new System.NotImplementedException();
+    }
+
+    public TExtension getComponentAt(int x, int y) {
+        throw new System.NotImplementedException();
+    }
+
+    public List<TExtension> getAllGraphComponents() {
+        throw new System.NotImplementedException();
+    }
+    #endregion
 
     public Clock Clock {
         get {
@@ -74,6 +97,12 @@ public class Terminal : Item{
         }
         set {
             this.clock = value;
+        }
+    }
+
+    public string Name {
+        get {
+            return this.name;
         }
     }
 }

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InteractiveComponent : GraphComponent {
+public abstract class InteractiveComponent : LightComponent {
 
     protected List<Sender> senders = new List<Sender>();
     protected List<Receiver> receivers = new List<Receiver>();
     protected int state;
 
-    public InteractiveComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, int numSenders, int numRecievers, ComponentCategory type) : 
-        base(position, size, rotation, flipped, type) {
+    public InteractiveComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, int numSenders, int numRecievers) : 
+        base(position, size, rotation, flipped) {
 
         Vector2Int rotatedSize = size;
         if ((rotation % 2) == 1) {

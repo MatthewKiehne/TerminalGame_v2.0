@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LogicGraph : TExtension {
+public class LogicGraph : TExtension, GraphInteger<LightComponent>  {
 
     private List<PassiveComponent> passiveComponents = new List<PassiveComponent>();
     private List<LogicComponent> logicComponents = new List<LogicComponent>();
@@ -14,135 +14,20 @@ public class LogicGraph : TExtension {
     public const int MaxRayDistance = 1000;
     public const int maxBounces = 16;
 
-    public LogicGraph(int width, int height, string name) : base(name) {
+    public LogicGraph(int width, int height, string name, Vector2Int position) : base(name,position) {
 
         this.width = width;
         this.height = height;
     }
 
-    public bool addComponent(GraphComponent comp) {
+    #region classSpecific
 
-        bool result = false;
-
-        if (this.canPlace(comp)) {
-
-            result = true;
-
-            if (comp.GetType().BaseType == typeof(LogicComponent)) {
-
-                this.logicComponents.Add((LogicComponent)comp);
-                result = true;
-
-            } else if (comp.GetType().BaseType == typeof(PassiveComponent)) {
-
-                this.passiveComponents.Add((PassiveComponent)comp);
-                result = true;
-            } else if (comp.GetType().BaseType == typeof(BridgeComponent)) {
-
-                result = true;
-
-                if (comp.GetType() == typeof(ReceiveBridge)) {
-                    this.ReceiveBridges.Add((ReceiveBridge)comp);
-
-                } else if (comp.GetType() == typeof(SendBridge)) {
-                    this.sendBridges.Add((SendBridge)comp);
-
-                } else {
-                    throw new System.Exception(comp.GetType() + " can not be added to the Logic Graph the Bridge type is not supported");
-                }
-            } else {
-                throw new System.Exception(comp.GetType() + " can not be added to the Logic Graph becasue the Type does not match");
-            }
-        }
-        return result;
-    }
-
-    public void addComponentAndConnect(GraphComponent component) {
+    public void addComponentAndConnect(LightComponent component) {
         //clears all the components and then reconnects them all with the new component
 
         this.disconnectGraph();
-        this.addComponent(component);
+        addComponent(component);
         this.connectGraph();
-    }
-
-    public bool removeComponent(GraphComponent component) {
-        //removes the component from the graph
-        bool result = false;
-
-        List<GraphComponent> all = this.getAllGraphComponents();
-        int counter = 0;
-
-        while (counter < all.Count && !result) {
-
-            if (all[counter].Equals(component)) {
-
-                if (component.GetType().IsSubclassOf(typeof(LogicComponent))) {
-                    result = this.logicComponents.Remove((LogicComponent)component);
-                } else if (component.GetType().IsSubclassOf(typeof(PassiveComponent))) {
-                    result = this.passiveComponents.Remove((PassiveComponent)component);
-                } else if(component.GetType().IsSubclassOf(typeof(BridgeComponent))){
-                    if (component.GetType() == typeof(ReceiveBridge)) {
-                        result = this.ReceiveBridges.Remove((ReceiveBridge)component);
-                    } else if (component.GetType() == typeof(SendBridge)) {
-                        result = this.sendBridges.Remove((SendBridge)component);
-                    } else {
-                        throw new System.Exception(component.GetType() + " can not be removed to the Logic Graph");
-                    }
-                } else {
-                    throw new Exception("TypeNotFound: type " + component.GetType() + " is not a subclass on the looked at classes");
-                }
-
-                //Debug.Log("Logic Graph -> removeComponent(): " + result);
-            }
-            counter++;
-        }
-
-        if(result == true) {
-            //redundent statement but i like it
-
-            this.disconnectGraph();
-            this.connectGraph();
-        }
-
-        return result;
-    }
-
-    public bool canPlace(GraphComponent component) {
-        //checks to see if the component can be placed on the graph
-        bool result = true;
-        int counter = 0;
-
-        List<GraphComponent> all = this.getAllGraphComponents();
-
-        while (result && counter < all.Count) {
-
-            if (component.getDimentions().Overlaps(all[counter].getDimentions())) {
-                result = false;
-            }
-
-            counter++;
-        }
-
-        return result;
-    }
-
-    public GraphComponent getComponentAt(int x, int y) {
-        //gets the logic component at the x and y position
-        GraphComponent result = null;
-
-        List<GraphComponent> all = this.getAllGraphComponents();
-        int counter = 0;
-
-        while (counter < all.Count && result == null) {
-
-            if(all[counter].getDimentions().Overlaps(new Rect(x + .1f,y + .1f,.8f,.8f))) {
-                result = all[counter];
-            }
-
-            counter++;
-        }
-
-        return result;
     }
 
     public void connectGraph() {
@@ -269,7 +154,7 @@ public class LogicGraph : TExtension {
         List<Receiver> result = new List<Receiver>();
 
 
-        List<GraphComponent> components = this.getAllGraphComponents();
+        List<LightComponent> components = this.getAllGraphComponents();
 
         //default to rotation 0
         Func<ComponentPiece, ComponentPiece, bool> selector = (closestPiece, checkingPiece) => {
@@ -425,26 +310,6 @@ public class LogicGraph : TExtension {
         return this.passiveComponents.Count;
     }
 
-    public List<GraphComponent> getAllGraphComponents() {
-
-        List<GraphComponent> result = new List<GraphComponent>();
-
-        foreach (LogicComponent lc in this.logicComponents) {
-            result.Add(lc);
-        }
-        foreach (PassiveComponent pc in this.passiveComponents) {
-            result.Add(pc);
-        }
-        foreach (SendBridge sb in this.sendBridges) {
-            result.Add(sb);
-        }
-        foreach (ReceiveBridge rb in this.receiveBridges) {
-            result.Add(rb);
-        }
-
-        return result;
-    }
-
     public List<InteractiveComponent> getAllInteractiveComponents() {
         //gets all the interactive components
 
@@ -463,7 +328,150 @@ public class LogicGraph : TExtension {
         return result;
     }
 
-    #region Overrides
+    #endregion
+
+    #region GraphInteger
+
+    public bool addComponent(LightComponent comp) {
+
+        bool result = false;
+
+        if (this.canPlace(comp)) {
+
+            result = true;
+
+            if (comp.GetType().BaseType == typeof(LogicComponent)) {
+
+                this.logicComponents.Add((LogicComponent)comp);
+                result = true;
+
+            } else if (comp.GetType().BaseType == typeof(PassiveComponent)) {
+
+                this.passiveComponents.Add((PassiveComponent)comp);
+                result = true;
+            } else if (comp.GetType().BaseType == typeof(BridgeComponent)) {
+
+                result = true;
+
+                if (comp.GetType() == typeof(ReceiveBridge)) {
+                    this.ReceiveBridges.Add((ReceiveBridge)comp);
+
+                } else if (comp.GetType() == typeof(SendBridge)) {
+                    this.sendBridges.Add((SendBridge)comp);
+
+                } else {
+                    throw new System.Exception(comp.GetType() + " can not be added to the Logic Graph the Bridge type is not supported");
+                }
+            } else {
+                throw new System.Exception(comp.GetType() + " can not be added to the Logic Graph becasue the Type does not match");
+            }
+        }
+        return result;
+    }
+
+    public List<LightComponent> getAllGraphComponents() {
+
+        List<LightComponent> result = new List<LightComponent>();
+
+        foreach (LogicComponent lc in this.logicComponents) {
+            result.Add(lc);
+        }
+        foreach (PassiveComponent pc in this.passiveComponents) {
+            result.Add(pc);
+        }
+        foreach (SendBridge sb in this.sendBridges) {
+            result.Add(sb);
+        }
+        foreach (ReceiveBridge rb in this.receiveBridges) {
+            result.Add(rb);
+        }
+
+        return result;
+    }
+
+    public bool removeComponent(LightComponent component) {
+        //removes the component from the graph
+        bool result = false;
+
+        List<LightComponent> all = this.getAllGraphComponents();
+        int counter = 0;
+
+        while (counter < all.Count && !result) {
+
+            if (all[counter].Equals(component)) {
+
+                if (component.GetType().IsSubclassOf(typeof(LogicComponent))) {
+                    result = this.logicComponents.Remove((LogicComponent)component);
+                } else if (component.GetType().IsSubclassOf(typeof(PassiveComponent))) {
+                    result = this.passiveComponents.Remove((PassiveComponent)component);
+                } else if (component.GetType().IsSubclassOf(typeof(BridgeComponent))) {
+                    if (component.GetType() == typeof(ReceiveBridge)) {
+                        result = this.ReceiveBridges.Remove((ReceiveBridge)component);
+                    } else if (component.GetType() == typeof(SendBridge)) {
+                        result = this.sendBridges.Remove((SendBridge)component);
+                    } else {
+                        throw new System.Exception(component.GetType() + " can not be removed to the Logic Graph");
+                    }
+                } else {
+                    throw new Exception("TypeNotFound: type " + component.GetType() + " is not a subclass on the looked at classes");
+                }
+
+                //Debug.Log("Logic Graph -> removeComponent(): " + result);
+            }
+            counter++;
+        }
+
+        if (result == true) {
+            //redundent statement but i like it
+
+            this.disconnectGraph();
+            this.connectGraph();
+        }
+
+        return result;
+    }
+
+    public bool canPlace(LightComponent component) {
+        //checks to see if the component can be placed on the graph
+        bool result = true;
+        int counter = 0;
+
+        List<LightComponent> all = this.getAllGraphComponents();
+
+        while (result && counter < all.Count) {
+
+            if (component.getDimentions().Overlaps(all[counter].getDimentions())) {
+                result = false;
+            }
+
+            counter++;
+        }
+
+        return result;
+    }
+
+    public LightComponent getComponentAt(int x, int y) {
+        //gets the logic component at the x and y position
+        LightComponent result = null;
+
+        List<LightComponent> all = this.getAllGraphComponents();
+        int counter = 0;
+
+        while (counter < all.Count && result == null) {
+
+            if (all[counter].getDimentions().Overlaps(new Rect(x + .1f, y + .1f, .8f, .8f))) {
+                result = all[counter];
+            }
+
+            counter++;
+        }
+
+        return result;
+    }
+
+    #endregion
+
+    #region TExtension
 
     public override void setState() {
         foreach (LogicComponent lc in this.getAllInteractiveComponents()) {

@@ -221,7 +221,7 @@ public class LogicGraphContent : WindowContent {
 
                 if (this.currentState == EditorState.AddCompoent) {
 
-                    GraphComponent made = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+                    LightComponent made = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
                     bool canPlace = this.logicGraphController.Graph.canPlace(made);
                    
                     this.mouseObject.transform.Find("X").gameObject.SetActive(!canPlace);
@@ -256,7 +256,7 @@ public class LogicGraphContent : WindowContent {
 
             if (this.currentState == EditorState.AddCompoent) {
                 //adds the component
-                GraphComponent comp = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+                LightComponent comp = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
 
                 if (this.logicGraphController.Graph.canPlace(comp) &&
                 this.inputs.CurrentFrameData.RaycastResults.Count != 0 &&
@@ -272,7 +272,7 @@ public class LogicGraphContent : WindowContent {
                 //removes the component
 
                 Vector2Int gridPosition = this.getMouseLocalGridPosition();
-                GraphComponent hitComponent = this.graph.getComponentAt(gridPosition.x, gridPosition.y);
+                LightComponent hitComponent = this.graph.getComponentAt(gridPosition.x, gridPosition.y);
 
                 if(hitComponent != null) {
 
@@ -340,10 +340,10 @@ public class LogicGraphContent : WindowContent {
         return new Vector2Int(Mathf.FloorToInt(worldPoint.x - graphPosition.x), Mathf.FloorToInt(worldPoint.y - graphPosition.y));
     }
 
-    private GraphComponent duplicateAt(Type type, Vector2Int position, int rotation, bool flipped) {
+    private LightComponent duplicateAt(Type type, Vector2Int position, int rotation, bool flipped) {
         //makes a duplicate of the component passed in
 
-        GraphComponent result = null;
+        LightComponent result = null;
 
         if (type == typeof(AndGate)) {
             result = new AndGate(position, rotation, flipped);
@@ -383,7 +383,7 @@ public class LogicGraphContent : WindowContent {
 
         this.destroyMouseChildren();
 
-        GraphComponent madeComponent = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+        LightComponent madeComponent = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
 
         GraphComponentController gcc = this.logicGraphController.ComponentManager.createComponent(madeComponent);
         gcc.transform.SetParent(this.mouseObject.transform);

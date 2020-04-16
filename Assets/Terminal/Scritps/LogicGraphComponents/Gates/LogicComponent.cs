@@ -10,7 +10,7 @@ public abstract class LogicComponent : InteractiveComponent {
     public abstract void setState();
 
     public LogicComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped,  int numSenders, int numReceivers) : 
-        base(position,size,rotation,flipped, numSenders, numReceivers, ComponentCategory.Logic){
+        base(position,size,rotation,flipped, numSenders, numReceivers){
     }
 
     

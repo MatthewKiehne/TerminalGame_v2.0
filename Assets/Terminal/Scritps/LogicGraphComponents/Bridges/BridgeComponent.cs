@@ -8,13 +8,13 @@ public abstract class BridgeComponent : InteractiveComponent {
     protected int length;
 
     public BridgeComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, int numSenders, int numRecievers) : 
-        base(position, size, rotation, flipped, numSenders, numRecievers, ComponentCategory.Bridge) {
+        base(position, size, rotation, flipped, numSenders, numRecievers) {
 
         this.name = "IDK Name LOL";
     }
 
     public BridgeComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, int numSenders, int numRecievers, string name) :
-        base(position, size, rotation, flipped, numSenders, numRecievers, ComponentCategory.Bridge) {
+        base(position, size, rotation, flipped, numSenders, numRecievers) {
 
         this.name = name;
     }
