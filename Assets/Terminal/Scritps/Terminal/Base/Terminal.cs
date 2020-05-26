@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Terminal : GraphInteger<TExtension>{
 
-    
-
-
     private Clock clock;
 
-    private List<TExtension> extensions = new List<TExtension>();
+    private List<HeldExtension> heldExtensions = new List<HeldExtension>();
 
     private string name;
 
     public Terminal(string name) {
         this.name = name;
+    }
+    public Terminal(TerminalData data) {
+        this.name = data.Name;
     }
 
     public int updateTime(float timePassed) {
@@ -43,35 +43,43 @@ public class Terminal : GraphInteger<TExtension>{
         //Debug.Log("Terminal Update Extensions " + this.Name);
 
         //sets the state of each extension then clears the extensions
-        for (int i = 0; i < this.extensions.Count; i++) {
-            this.extensions[i].setState();
-            this.extensions[i].clearReceivers();
+        for (int i = 0; i < this.heldExtensions.Count; i++) {
+            this.heldExtensions[i].Extension.setState();
+            this.heldExtensions[i].Extension.clearReceivers();
 
             //Debug.Log("extension Update: " + this.extensions[i].Name);
         }
 
         //sends the signal to the extensions
-        for(int i = 0; i < this.extensions.Count; i++) {
-            this.extensions[i].sendSignal();
+        for(int i = 0; i < this.heldExtensions.Count; i++) {
+            this.heldExtensions[i].Extension.sendSignal();
         }
     }
 
     public TExtension getExtentionAt(int index) {
-        return this.extensions[index];
+        return this.heldExtensions[index].Extension;
     }
 
     public int getExtentionLength() {
-        return this.extensions.Count;
+        return this.heldExtensions.Count;
     }
 
-    
-    public void addExtension(TExtension extension) {
-        this.extensions.Add(extension);
+    public List<TExtension> placedExtensions() {
+        //gets all the placed TExtensions
+        List<TExtension> result = new List<TExtension>();
+
+        for(int i = 0; i < this.heldExtensions.Count; i++) {
+            if (this.heldExtensions[i].Placed) {
+                result.Add(this.heldExtensions[i].Extension);
+            }
+        }
+        return result;
     }
 
     #region GraphInteger
     public bool addComponent(TExtension component) {
-        throw new System.NotImplementedException();
+        this.heldExtensions.Add(new HeldExtension(component));
+        return true;
     }
 
     public bool removeComponent(TExtension component) {
@@ -79,7 +87,21 @@ public class Terminal : GraphInteger<TExtension>{
     }
 
     public bool canPlace(TExtension component) {
-        throw new System.NotImplementedException();
+        //checks if the component passed in overlaps a component that is already placed
+
+        bool result = true;
+        List<TExtension> placed = this.placedExtensions();
+        int counter = 0;
+
+        while(result && counter < placed.Count) {
+
+            if (placed[counter].getDimentions().Overlaps(component.getDimentions())){
+                result = false;
+            }
+            counter++;
+        }
+
+        return result;
     }
 
     public TExtension getComponentAt(int x, int y) {
@@ -99,10 +121,36 @@ public class Terminal : GraphInteger<TExtension>{
             this.clock = value;
         }
     }
-
     public string Name {
         get {
             return this.name;
         }
+    }
+
+    private class HeldExtension {
+
+        private TExtension extension;
+        private bool placed;
+
+        public HeldExtension(TExtension extension) {
+            this.extension = extension;
+            this.placed = false;
+        }
+
+        public TExtension Extension {
+            get {
+                return this.extension;
+            }
+        }
+
+        public bool Placed {
+            get {
+                return this.placed;
+            }
+            set {
+                this.placed = value;
+            }
+        }
+
     }
 }

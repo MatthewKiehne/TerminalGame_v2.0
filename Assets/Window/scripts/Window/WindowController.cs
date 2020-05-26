@@ -19,14 +19,20 @@ public class WindowController : MonoBehaviour {
 
 		//closes the window when exiting 
 		transform.Find("Header").Find("Exit").GetComponent<Button> ().onClick.AddListener ( () => {
-			
-			this.data.Contents.onDestroy();
-			manager.removeWindow(this);
+
+            this.destroyWindow();
 		});	
 
 		//makes sure the contents is the correct size
 		this.onResizeWindow ();
 	}
+
+    public void destroyWindow() {
+        //destroys this window
+
+        this.data.Contents.onDestroy();
+        manager.removeWindow(this);
+    }
 
 	public void setUpWindow(Window window, WindowManager manager, Canvas canvas){
 
@@ -41,20 +47,25 @@ public class WindowController : MonoBehaviour {
 
 		//sets the min width
 		this.setWidth (window.MinWidth, window.MinHeight);
-		this.setFixedSize (window.FixedSize);
+		this.setFixedSize (window.Contents.FixxedSize);
 
-		//updates the name
-		this.transform.Find ("Header").Find ("WindowTitle").GetComponent<Text> ().text = window.Name;
+        //updates the name
+        Transform header = this.transform.Find("Header");
+        header.Find ("WindowTitle").GetComponent<Text> ().text = window.Name;
 
 		//makes this window the primary window
 		manager.makeActive(this);
 
 		//makes it so you cant resize the window
-		if (this.data.FixedSize) {
+		if (this.data.Contents.FixxedSize) {
 			Transform resizeTrans = this.transform.Find ("BottomPanel/ResizePanel");
 			resizeTrans.GetComponent<ResizeWindow> ().enabled = false;
 			resizeTrans.GetComponent<Image> ().color = new Color(.5f,.0f,.0f);
 		}
+
+        if (!this.data.Contents.Movable) {
+            header.GetComponent<DragWindow>().enabled = false;
+        }
 	}
 
 	private void setWidth(int width, int height){

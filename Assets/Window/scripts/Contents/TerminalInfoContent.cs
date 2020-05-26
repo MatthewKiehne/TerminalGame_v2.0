@@ -56,7 +56,7 @@ public class TerminalInfoContent : WindowContent {
 
                     LogicGraph graph = (LogicGraph)this.terminalController.Terminal.getExtentionAt(index);
                     LogicGraphContent lgContent = new LogicGraphContent(graph, terminalController.GraphManager);
-                    Window win = new Window(graph.Name, 200, 200, false, lgContent);
+                    Window win = new Window(graph.Name, 200, 200, lgContent);
 
                     windowManager.spawnWindow(win);
                 }

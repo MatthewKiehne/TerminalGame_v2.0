@@ -15,7 +15,7 @@ public class TerminalListContent : WindowContent {
 
 
         //loads and instantiates the gui
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalList"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EmptyList"];
         GameObject gui = GameObject.Instantiate(guiPrefab);
         gui.transform.SetParent(contentPanel, false);
 
@@ -45,7 +45,7 @@ public class TerminalListContent : WindowContent {
 
                 WindowContent content = new TerminalInfoContent(this.terminalManager.TerminalControllers[index]);
 				Window win = new Window( this.terminalManager.TerminalControllers[index].Terminal.Name + " - Terminal Info", 
-                    150, 150, false, content);
+                    150, 150, content);
 				windowManager.spawnWindow(win);
 			});
             

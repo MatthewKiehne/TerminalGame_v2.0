@@ -27,7 +27,6 @@ public class UpdateToggle : MonoBehaviour {
 
         this.runButton.onClick.AddListener(() => {
             this.updateTime = !updateTime;
-            Debug.Log("Updates Running:" + updateTime);
         });
     }
 

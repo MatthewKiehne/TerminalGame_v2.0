@@ -6,16 +6,16 @@ public class Window {
 
 	private int minWidth;
 	private int minHeight;
-	private bool fixedSize = false;
 	private string name;
 	private WindowContent contents;
 
-	public Window(string name, int minWidth, int minHeight, bool fixedSize, WindowContent contents){
+	public Window(string name, int minWidth, int minHeight, WindowContent contents){
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;
-		this.fixedSize = fixedSize;
 		this.name = name;
 		this.contents = contents;
+
+        
 	}
 
 	public string Name {
@@ -33,12 +33,6 @@ public class Window {
 	public int MinHeight {
 		get {
 			return minHeight;
-		}
-	}
-
-	public bool FixedSize {
-		get {
-			return fixedSize;
 		}
 	}
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,12 @@ public class ClockListContent : WindowContent {
 
 
         //loads and instantiates the gui
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalList"];
+        //GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EmptyList"];
+
+        Debug.Log(SceneResouces.SceneObjects[typeof(GameObject)].ContainsKey("EmptyList"));
+
+
+        /*
 		GameObject gui = GameObject.Instantiate (guiPrefab);
 		gui.transform.SetParent (contentPanel, false);
 
@@ -38,16 +44,17 @@ public class ClockListContent : WindowContent {
 
 			Button b = button.GetComponent<Button> ();
 
-            /*
+            
 
-			b.onClick.AddListener (() => {
-
-				WindowContent content = new ClockInfoContent(allClocks[index]);
-				Window win = new Window("clock info", 150, 150, false, content);
-				windowManager.spawnWindow(win);
-			});
-            */
+			//b.onClick.AddListener (() => {
+            //
+			//	WindowContent content = new ClockInfoContent(allClocks[index]);
+			//	Window win = new Window("clock info", 150, 150, false, content);
+			//	windowManager.spawnWindow(win);
+			//});
+            
 		}
+    */
 	}
 
 	public override void changeWindowSize (int width, int height) {

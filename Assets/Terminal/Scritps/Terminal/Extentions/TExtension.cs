@@ -9,7 +9,7 @@ public abstract class TExtension : GraphComponent {
 
     private string name;
 
-    public TExtension(string name, Vector2Int position) : base(position, new Vector2Int(3, 3), 0, false) {
+    public TExtension(string name, Vector2Int position) : base(position, new Vector2Int(5, 5), 0, false) {
         this.name = name;
     }
 

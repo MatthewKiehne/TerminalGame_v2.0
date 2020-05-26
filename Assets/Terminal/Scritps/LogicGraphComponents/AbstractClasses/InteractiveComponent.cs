@@ -165,6 +165,35 @@ public abstract class InteractiveComponent : LightComponent {
         }
     }
 
+    public override List<Tuple> getValues() {
+
+        List<Tuple> result = new List<Tuple>();
+        
+        for(int i = 0; i < this.receivers.Count; i++) {
+            result.Add(new Tuple("rec:" + i, this.getReceiverAt(i).getActive() + ""));
+        }
+
+        return result;
+    }
+
+    public override void setValues(List<Tuple> values) {
+        //sets the receivers to the correct value
+
+        string receiverString = "rec:";
+        foreach(Tuple tup in values) {
+            if (tup.Name.StartsWith(receiverString)) {
+
+                int index = int.Parse(tup.Name.Substring(receiverString.Length));
+                bool state = bool.Parse(tup.Value);
+
+                //Debug.Log(index + " " + state);
+                this.getReceiverAt(index).setActive(state);
+            }
+        }
+
+        
+    }
+
     public Sender getSenderAt(int index) {
         return this.senders[index];
     }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LogicGraph : TExtension, GraphInteger<LightComponent>  {
+public class LogicGraph : TExtension, GraphInteger<LightComponent> {
 
     private List<PassiveComponent> passiveComponents = new List<PassiveComponent>();
     private List<LogicComponent> logicComponents = new List<LogicComponent>();
@@ -14,10 +14,60 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent>  {
     public const int MaxRayDistance = 1000;
     public const int maxBounces = 16;
 
-    public LogicGraph(int width, int height, string name, Vector2Int position) : base(name,position) {
+    public LogicGraph(int width, int height, string name, Vector2Int position) : base(name, position) {
 
         this.width = width;
         this.height = height;
+    }
+
+    public LogicGraph(LogicGraphData data) : base(data.Name, new Vector2Int(data.position[0], data.position[1])) {
+        //loads the logic graph from data
+
+        this.width = data.Width;
+        this.height = data.Height;
+
+        foreach (GraphComponentData gcd in data.Components) {
+
+            Type type = Type.GetType(gcd.Type);
+            LightComponent lightComponent = null;
+
+            if (type.IsSubclassOf(typeof(LogicComponent))) {
+
+                LogicComponent logic = (LogicComponent)Activator.CreateInstance(
+                    type,
+                    new object[] {
+                        new Vector2Int(gcd.Position[0], gcd.Position[1]),
+                        gcd.Rotaiton,
+                        gcd.Flipped
+                    });
+
+                //sets state of the component
+                logic.setState();
+
+                lightComponent = logic;
+
+            } else if (type.IsSubclassOf(typeof(PassiveComponent))) {
+
+                lightComponent = (PassiveComponent)Activator.CreateInstance(
+                    type,
+                    new object[] {
+                        new Vector2Int(gcd.Position[0], gcd.Position[1]),
+                        gcd.Rotaiton,
+                        gcd.Flipped
+                    });
+
+            } else {
+                throw new Exception("Type " + type + " is not accepted from LogicGraphData");
+            }
+
+            if(lightComponent != null) {
+
+                lightComponent.setValues(gcd.Values);
+                this.addComponent(lightComponent);
+            }
+        }
+
+        this.connectGraph();
     }
 
     #region classSpecific
@@ -501,6 +551,14 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent>  {
     }
 
     #endregion
+
+    public override List<Tuple> getValues() {
+        throw new NotImplementedException();
+    }
+
+    public override void setValues(List<Tuple> values) {
+        throw new NotImplementedException();
+    }
 
     public int Width {
         get {

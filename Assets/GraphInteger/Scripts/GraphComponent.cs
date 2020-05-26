@@ -4,14 +4,10 @@ using UnityEngine;
 
 public abstract class GraphComponent {
 
-    //public enum ComponentCategory { Logic, Passive, Bridge}
-
     private Vector2Int position;
     private Vector2Int size;
     private int rotaiton;
     private bool flipped;
-
-    //private ComponentCategory compType;
 
     protected List<ComponentPiece> componentPieces = new List<ComponentPiece>();
 
@@ -20,7 +16,6 @@ public abstract class GraphComponent {
         this.size = size;
         this.rotaiton = rotation;
         this.flipped = flipped;
-        //this.compType = type;
     }
 
     public Rect getDimentions() {
@@ -33,6 +28,10 @@ public abstract class GraphComponent {
 
         return new Rect(this.position, rotatedSize);
     }
+
+    public abstract List<Tuple> getValues();
+
+    public abstract void setValues(List<Tuple> values);
 
     public Vector2Int Position {
         get {
@@ -63,12 +62,4 @@ public abstract class GraphComponent {
             return this.componentPieces;
         }
     }
-
-    /*
-    public ComponentCategory ComponentType {
-        get {
-            return this.compType;
-        }
-    }
-    */
 }

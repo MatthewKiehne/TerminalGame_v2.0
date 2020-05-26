@@ -4,7 +4,7 @@ Prefabs/LogicComponents/BasicLogicComponent
 Prefabs/Graphs/Graph
 Prefabs/Connections/Ray
 Prefabs/Window/Window
-Prefabs/WindowGUI/TerminalList
+Prefabs/WindowGUI/EmptyList
 Prefabs/WindowGUI/TerminalInfo
 Prefabs/WindowGUI/GraphEditor
 Prefabs/BasicGUI/BasicButton

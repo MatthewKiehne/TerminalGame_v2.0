@@ -11,13 +11,7 @@ public class WindowManager : MonoBehaviour {
     private Canvas useCanvas;
 
 	private List<WindowController> windows = new List<WindowController> ();
-
-	public GameObject spawnWindow(Window window){
-		//creates a window using the "main canvas"
-		//returns the window
-        
-		return this.spawnWindow (this.useCanvas, window);
-	}
+    private bool allowSpawnWindows = true;
 
     public bool windowAlreadyExists(WindowContent contents) {
         //checks to see if the window already exists
@@ -78,6 +72,13 @@ public class WindowManager : MonoBehaviour {
 
 		return win;
 	}
+
+    public GameObject spawnWindow(Window window) {
+        //creates a window using the "main canvas"
+        //returns the window
+
+        return this.spawnWindow(this.useCanvas, window);
+    }
 
     private WindowController getControllerByData(WindowContent content) {
         //gets the controller based by the content
@@ -160,6 +161,25 @@ public class WindowManager : MonoBehaviour {
 		}
 	}
 
+    public void removeAllWindows() {
+        //removes all the windows
+
+        int counter = 0;
+
+        while(this.windows.Count > 0 || counter > 100) {
+            this.windows[0].destroyWindow();
+            counter++;
+        }
+    }
+
+    public void setActivityofCurrentWindows(bool value) {
+        //shows or hides all the windows
+
+        foreach(WindowController content in this.windows) {
+            content.gameObject.SetActive(value);
+        }
+    }
+
 	public void makeActive(WindowController controller){
 
 		bool found = windows.Remove (controller);
@@ -180,4 +200,13 @@ public class WindowManager : MonoBehaviour {
 
 		return  result;
 	}
+
+    public bool AllowSpawnWindows {
+        get {
+            return this.allowSpawnWindows;
+        }
+        set {
+            this.allowSpawnWindows = value;
+        }
+    }
 }

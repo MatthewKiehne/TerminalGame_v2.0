@@ -19,6 +19,15 @@ public class TerminalManager : TimeDependent {
         
     }
 
+    public void clearTerminal() {
+        //destroys all the terminals
+
+        foreach(TerminalController terCon in this.terminalControllers) {
+            GameObject.Destroy(terCon.gameObject);
+        }
+        this.terminalControllers.Clear();
+    }
+
     public void updateAllTerminalVisuals() {
         foreach (TerminalController ter in this.terminalControllers) {
             ter.updateVisuals();

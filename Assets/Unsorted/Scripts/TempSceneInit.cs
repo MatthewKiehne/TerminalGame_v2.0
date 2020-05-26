@@ -10,30 +10,13 @@ public class TempSceneInit : MonoBehaviour {
     //private List<Terminal> terminals = new List<Terminal>();
     private TerminalManager terminalManager;
 
+    private List<Terminal> allTerminals;
+
     [SerializeField]
     private Sprite truthTableSprite;
 
     [SerializeField]
     private Sprite logicGraphControls;
-
-
-    private void showComponent(GraphComponent component, Sprite sprite) {
-
-        List<ComponentPiece> pieces = component.ComponentPieces;
-
-        foreach (ComponentPiece piece in pieces) {
-            showRect(piece.Rect, sprite);
-        }
-    }
-
-    private void showRect(Rect rect, Sprite sprite) {
-        GameObject go = new GameObject();
-        go.transform.position = rect.center;
-        SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = sprite;
-        go.transform.localScale = rect.size;
-    }
-
 
     void Start() {
 
@@ -63,31 +46,32 @@ public class TempSceneInit : MonoBehaviour {
         LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph",Vector2Int.zero);
         LogicGraph testGraph = new LogicGraph(100, 100, "Test Graph", Vector2Int.zero);
 
+        testGraph.addComponent(new Reflector(new Vector2Int(1, 6), 0, false));
         testGraph.addComponent(new NotGate(new Vector2Int(1, 4), 0, false));
         testGraph.addComponent(new NotGate(new Vector2Int(1, 1), 0, false));
         testGraph.connectGraph();
 
-        firstTerminal.addExtension(testGraph);
-        firstTerminal.addExtension(emptyGraph);
+        firstTerminal.addComponent(testGraph);
+        firstTerminal.addComponent(emptyGraph);
 
         Terminal secondTerminal = new Terminal("Second Terminal");
-        secondTerminal.addExtension(new LogicGraph(20, 20, "Mini Graph", Vector2Int.zero));
+        secondTerminal.addComponent(new LogicGraph(20, 20, "Mini Graph", Vector2Int.zero));
 
         Terminal emptyTerminal = new Terminal("Blank Graphs");
         for(int i = 0; i < 10; i++) {
             LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1), Vector2Int.zero);
-            emptyTerminal.addExtension(tempEmptyGraph);
+            emptyTerminal.addComponent(tempEmptyGraph);
         }
 
-        List<Terminal> terminalList = new List<Terminal>();
-        terminalList.Add(firstTerminal);
-        terminalList.Add(secondTerminal);
-        terminalList.Add(emptyTerminal);
+        this.allTerminals = new List<Terminal>();
+        this.allTerminals.Add(firstTerminal);
+        //this.allTerminals.Add(secondTerminal);
+        //this.allTerminals.Add(emptyTerminal);
 
         GameObject terminalManagerGO = new GameObject("Terminal Manager");
         this.terminalManager = terminalManagerGO.AddComponent<TerminalManager>();
         
-        foreach(Terminal ter in terminalList) {
+        foreach(Terminal ter in this.allTerminals) {
             this.terminalManager.displayTerminal(ter);
         }
     }
@@ -96,39 +80,12 @@ public class TempSceneInit : MonoBehaviour {
 
         //window test
         WindowContent testContents = new TerminalListContent(this.terminalManager);
-        Window win = new Window("All Terminals", 200, 200, false, testContents);
+        Window win = new Window("All Terminals", 200, 200, testContents);
 
         GameObject windowManagerGO = GameObject.Find("WindowManager");
         WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
 
         wm.spawnWindow(win);
-    }
-
-    public void truthTableWindow() {
-
-        ImageContent testContents = new ImageContent(this.truthTableSprite);
-        Window win = new Window("Truth Tables", 200, 200, false, testContents);
-
-        GameObject windowManagerGO = GameObject.Find("WindowManager");
-        WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
-
-        wm.spawnWindow(win);
-    }
-
-    public void logicGraphControlWindow() {
-
-        ImageContent testContents = new ImageContent(this.logicGraphControls);
-        Window win = new Window("Logic Graph Controls", 200, 200, false, testContents);
-
-        GameObject windowManagerGO = GameObject.Find("WindowManager");
-        WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
-
-        wm.spawnWindow(win);
-
-    }
-
-    public void clickLink(string str1, string str2, int num) {
-        Debug.Log(str1 + "," + str2 + "," + num);
     }
 
     public void updateAllTerminals() {
@@ -137,6 +94,66 @@ public class TempSceneInit : MonoBehaviour {
         this.updateData();
         this.updateVisuals();
         
+    }
+
+    public void saveButton() {
+
+        string path = Application.dataPath + "/Saves/Resources/Saves";
+
+        string illegal = System.DateTime.Now.ToString();
+        string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+        Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+        illegal = r.Replace(illegal, " ");
+
+        Save.makeDirectory(path, illegal);
+
+        path += "/" + illegal + "/";
+
+        string terminalFolder = "Terminals";
+        Save.makeDirectory(path, terminalFolder);
+
+        path += "/" + terminalFolder;
+
+
+        foreach(Terminal ter in this.allTerminals) {
+
+            //makes terminal directory
+            Save.makeDirectory(path, ter.Name);
+            string tempPath = path + "/" + ter.Name + "/";
+
+            //saves terminal json
+            Save.saveJson<TerminalData>(new TerminalData(ter), tempPath, ter.Name + ".json");
+
+            //makes directory for logic graphs
+            Save.makeDirectory(tempPath, "LogicGraphs");
+            tempPath += "/LogicGraphs";
+
+            for (int i = 0; i < ter.getExtentionLength(); i++) {
+
+                TExtension extension = ter.getExtentionAt(i);
+                if(extension.GetType() == typeof(LogicGraph)) {
+
+                    string name = extension.Name + ".json";
+
+                    LogicGraph lg = (LogicGraph)extension;
+                    Save.saveJson<LogicGraphData>(new LogicGraphData(lg), tempPath, name);
+                }
+            }
+        }
+    }
+
+    public void loadButton() {
+
+        //hide all the windows
+        GameObject windowManagerGO = GameObject.Find("WindowManager");
+        WindowManager wm = windowManagerGO.GetComponent<WindowManager>();
+        wm.setActivityofCurrentWindows(false);
+
+        //spawn load window
+        wm.spawnWindow(new Window("Load Save", 300, 250, new LoadTerminalContent(wm, this.terminalManager)));
+
+        //disable other window from spawning
+        wm.AllowSpawnWindows = false;
     }
 
     private void updateVisuals() {
