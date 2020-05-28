@@ -48,6 +48,8 @@ public class LoadTerminalContent : WindowContent {
         GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicButton"];
         Transform display = gui.transform.Find("Mask").Find("Display");
 
+        
+
         List<Terminal> loadedTerminals = new List<Terminal>();
 
         //loops through all the terminals
@@ -69,11 +71,12 @@ public class LoadTerminalContent : WindowContent {
 
             b.onClick.AddListener(() => {
 
+                //gets rid of all the prexisting terminals
+                this.terminalManager.clearTerminal();
+
                 string selectedSave = path + "/" + order[index];
                 selectedSave += "/Terminals";
                 string[] terminals = Directory.GetDirectories(selectedSave);
-
-                this.terminalManager.clearTerminal();
 
                 foreach (string ter in terminals) {
 

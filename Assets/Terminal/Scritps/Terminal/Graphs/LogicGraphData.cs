@@ -17,6 +17,8 @@ public class LogicGraphData
 
     public LogicGraphData(LogicGraph graph) {
 
+        //Debug.Log(graph.Name);
+
         this.Name = graph.Name;
         this.Width = graph.Width;
         this.Height = graph.Height;
@@ -26,6 +28,8 @@ public class LogicGraphData
 
         List<LightComponent> comps = graph.getAllGraphComponents();
         foreach(LightComponent comp in comps) {
+
+            //Debug.Log(comp.GetType());
             Components.Add(new GraphComponentData(comp));
         }
     }

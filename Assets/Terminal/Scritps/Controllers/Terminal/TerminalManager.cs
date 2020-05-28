@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class TerminalManager : TimeDependent {
 
-    //private List<TerminalController> terminalControllers = new List<TerminalController>();
     private List<TerminalController> terminalControllers = new List<TerminalController>();
 
     public void displayTerminal(Terminal terminal) {
-
-        
+       
         GameObject go = new GameObject(terminal.Name);
         TerminalController tc = go.AddComponent<TerminalController>();
         tc.setUp(terminal);
         this.terminalControllers.Add(tc);
         go.transform.position = Vector3.zero;
         go.transform.SetParent(this.transform, true);
-        
     }
 
     public void clearTerminal() {

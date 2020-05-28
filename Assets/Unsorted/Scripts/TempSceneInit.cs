@@ -10,7 +10,7 @@ public class TempSceneInit : MonoBehaviour {
     //private List<Terminal> terminals = new List<Terminal>();
     private TerminalManager terminalManager;
 
-    private List<Terminal> allTerminals;
+    //private List<Terminal> allTerminals;
 
     [SerializeField]
     private Sprite truthTableSprite;
@@ -44,14 +44,6 @@ public class TempSceneInit : MonoBehaviour {
         firstTerminal.Clock = newClock;
 
         LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph",Vector2Int.zero);
-        LogicGraph testGraph = new LogicGraph(100, 100, "Test Graph", Vector2Int.zero);
-
-        testGraph.addComponent(new Reflector(new Vector2Int(1, 6), 0, false));
-        testGraph.addComponent(new NotGate(new Vector2Int(1, 4), 0, false));
-        testGraph.addComponent(new NotGate(new Vector2Int(1, 1), 0, false));
-        testGraph.connectGraph();
-
-        firstTerminal.addComponent(testGraph);
         firstTerminal.addComponent(emptyGraph);
 
         Terminal secondTerminal = new Terminal("Second Terminal");
@@ -63,15 +55,15 @@ public class TempSceneInit : MonoBehaviour {
             emptyTerminal.addComponent(tempEmptyGraph);
         }
 
-        this.allTerminals = new List<Terminal>();
-        this.allTerminals.Add(firstTerminal);
+        List<Terminal> terms = new List<Terminal>();
+        terms.Add(firstTerminal);
         //this.allTerminals.Add(secondTerminal);
         //this.allTerminals.Add(emptyTerminal);
 
         GameObject terminalManagerGO = new GameObject("Terminal Manager");
         this.terminalManager = terminalManagerGO.AddComponent<TerminalManager>();
         
-        foreach(Terminal ter in this.allTerminals) {
+        foreach(Terminal ter in terms) {
             this.terminalManager.displayTerminal(ter);
         }
     }
@@ -115,22 +107,22 @@ public class TempSceneInit : MonoBehaviour {
         path += "/" + terminalFolder;
 
 
-        foreach(Terminal ter in this.allTerminals) {
+        foreach(TerminalController ter in this.terminalManager.TerminalControllers) {
 
             //makes terminal directory
-            Save.makeDirectory(path, ter.Name);
-            string tempPath = path + "/" + ter.Name + "/";
+            Save.makeDirectory(path, ter.Terminal.Name);
+            string tempPath = path + "/" + ter.Terminal.Name + "/";
 
             //saves terminal json
-            Save.saveJson<TerminalData>(new TerminalData(ter), tempPath, ter.Name + ".json");
+            Save.saveJson<TerminalData>(new TerminalData(ter.Terminal), tempPath, ter.Terminal.Name + ".json");
 
             //makes directory for logic graphs
             Save.makeDirectory(tempPath, "LogicGraphs");
             tempPath += "/LogicGraphs";
 
-            for (int i = 0; i < ter.getExtentionLength(); i++) {
+            for (int i = 0; i < ter.Terminal.getExtentionLength(); i++) {
 
-                TExtension extension = ter.getExtentionAt(i);
+                TExtension extension = ter.Terminal.getExtentionAt(i);
                 if(extension.GetType() == typeof(LogicGraph)) {
 
                     string name = extension.Name + ".json";
