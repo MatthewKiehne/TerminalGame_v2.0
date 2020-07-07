@@ -72,7 +72,7 @@ public abstract class InteractiveComponentController : GraphComponentController 
 
         for (int i = 0; i < this.senderControllers.Count; i++) {
 
-            bool isActive = Convert.ToBoolean((state >> i) & 1);
+            bool isActive = Convert.ToBoolean((state >> (this.senderControllers.Count - 1 - i)) & 1);
 
             this.senderControllers[i].updateSignal(isActive);
         }

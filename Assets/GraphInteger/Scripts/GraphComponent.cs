@@ -36,6 +36,8 @@ public abstract class GraphComponent {
     public Vector2Int Position {
         get {
             return this.position;
+        } set {
+            this.position = value;
         }
     }
 

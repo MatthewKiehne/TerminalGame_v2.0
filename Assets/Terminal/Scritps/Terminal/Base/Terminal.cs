@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terminal : GraphInteger<TExtension>{
+public class Terminal {
 
     private Clock clock;
 
-    private List<HeldExtension> heldExtensions = new List<HeldExtension>();
+    private List<TExtension> extensions = new List<TExtension>();
 
     private string name;
 
     public Terminal(string name) {
         this.name = name;
     }
+
+    public TExtension findExtension(string name) {
+        return this.extensions.Find(x => x.Name.Equals(name));
+    }
+
     public Terminal(TerminalData data) {
         this.name = data.Name;
     }
@@ -22,11 +27,11 @@ public class Terminal : GraphInteger<TExtension>{
 
         int numUpdates = 0;
 
-        if(this.clock != null) {
+        if (this.clock != null) {
 
             numUpdates = this.clock.updateTime(timePassed);
             Debug.Log(numUpdates);
-            for(int i = 0; i < numUpdates; i++) {
+            for (int i = 0; i < numUpdates; i++) {
                 this.updateExtensions();
             }
         }
@@ -43,63 +48,38 @@ public class Terminal : GraphInteger<TExtension>{
         //Debug.Log("Terminal Update Extensions " + this.Name);
 
         //sets the state of each extension then clears the extensions
-        for (int i = 0; i < this.heldExtensions.Count; i++) {
-            this.heldExtensions[i].Extension.setState();
-            this.heldExtensions[i].Extension.clearReceivers();
+        for (int i = 0; i < this.extensions.Count; i++) {
+            this.extensions[i].setState();
+            this.extensions[i].clearReceivers();
 
             //Debug.Log("extension Update: " + this.extensions[i].Name);
         }
 
         //sends the signal to the extensions
-        for(int i = 0; i < this.heldExtensions.Count; i++) {
-            this.heldExtensions[i].Extension.sendSignal();
+        for (int i = 0; i < this.extensions.Count; i++) {
+            this.extensions[i].sendSignal();
         }
-    }
-
-    public TExtension getExtentionAt(int index) {
-        return this.heldExtensions[index].Extension;
-    }
-
-    public int getExtentionLength() {
-        return this.heldExtensions.Count;
-    }
-
-    public List<TExtension> placedExtensions() {
-        //gets all the placed TExtensions
-        List<TExtension> result = new List<TExtension>();
-
-        for(int i = 0; i < this.heldExtensions.Count; i++) {
-            if (this.heldExtensions[i].Placed) {
-                result.Add(this.heldExtensions[i].Extension);
-            }
-        }
-        return result;
     }
 
     #region GraphInteger
     public bool addComponent(TExtension component) {
-        this.heldExtensions.Add(new HeldExtension(component));
+        this.extensions.Add(component);
         return true;
     }
 
     public bool removeComponent(TExtension component) {
-        throw new System.NotImplementedException();
-    }
-
-    public bool canPlace(TExtension component) {
-        //checks if the component passed in overlaps a component that is already placed
 
         bool result = true;
-        List<TExtension> placed = this.placedExtensions();
-        int counter = 0;
 
-        while(result && counter < placed.Count) {
-
-            if (placed[counter].getDimentions().Overlaps(component.getDimentions())){
-                result = false;
-            }
-            counter++;
+        //disconnect 
+        foreach(SendBridge send in component.SendBridges) {
+            send.clearConnections();
         }
+        foreach(ReceiveBridge rec in component.ReceiveBridges) {
+            rec.clearConnections();
+        }
+
+        result = this.extensions.Remove(component);
 
         return result;
     }
@@ -127,30 +107,33 @@ public class Terminal : GraphInteger<TExtension>{
         }
     }
 
-    private class HeldExtension {
+    public void addExtension(TExtension extension) {
+        this.extensions.Add(extension);
+    }
 
-        private TExtension extension;
-        private bool placed;
-
-        public HeldExtension(TExtension extension) {
-            this.extension = extension;
-            this.placed = false;
-        }
-
-        public TExtension Extension {
-            get {
-                return this.extension;
+    public bool removeExtension(TExtension extension) {
+        //removes the connections and then removes the component
+        bool result = this.extensions.Remove(extension);
+        if (result) {
+            foreach (SendBridge send in extension.SendBridges) {
+                send.clearConnections();
+            }
+            foreach (ReceiveBridge rec in extension.ReceiveBridges) {
+                rec.clearConnections();
             }
         }
+        return result;
+    }
 
-        public bool Placed {
-            get {
-                return this.placed;
-            }
-            set {
-                this.placed = value;
-            }
-        }
+    public TExtension extensionAt(int index) {
+        return this.extensions[index];
+    }
 
+    public int extensionLength() {
+        return this.extensions.Count;
+    }
+
+    public int extensionIndexOf(TExtension extension) {
+        return this.extensions.IndexOf(extension);
     }
 }

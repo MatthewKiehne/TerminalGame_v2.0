@@ -130,8 +130,9 @@ public abstract class InteractiveComponent : LightComponent {
             if (this.GetType().IsSubclassOf(typeof(BridgeComponent))) {
 
                 int state = 1;
-                state = state << i;
-
+                //Debug.Log("shift:" + (numRecievers - 1 - i));
+                state = state << (numRecievers - 1 - i);
+                //Debug.Log("interactive -> state: " + state);
                 receiver = new BReceiver(recieverRect,(SendBridge)this,state);
 
             } else if(this.GetType().IsSubclassOf(typeof(LogicComponent))) {
@@ -139,7 +140,6 @@ public abstract class InteractiveComponent : LightComponent {
             } else {
                 throw new System.Exception(this.GetType() + " is not supported when creating the receivers");
             }
-
              
             this.componentPieces.Add(receiver);
             this.receivers.Add(receiver);
@@ -163,35 +163,6 @@ public abstract class InteractiveComponent : LightComponent {
         for(int i = 0; i < this.receivers.Count; i++) {
             this.receivers[i].setActive(false);
         }
-    }
-
-    public override List<Tuple> getValues() {
-
-        List<Tuple> result = new List<Tuple>();
-        
-        for(int i = 0; i < this.receivers.Count; i++) {
-            result.Add(new Tuple("rec:" + i, this.getReceiverAt(i).getActive() + ""));
-        }
-
-        return result;
-    }
-
-    public override void setValues(List<Tuple> values) {
-        //sets the receivers to the correct value
-
-        string receiverString = "rec:";
-        foreach(Tuple tup in values) {
-            if (tup.Name.StartsWith(receiverString)) {
-
-                int index = int.Parse(tup.Name.Substring(receiverString.Length));
-                bool state = bool.Parse(tup.Value);
-
-                //Debug.Log(index + " " + state);
-                this.getReceiverAt(index).setActive(state);
-            }
-        }
-
-        
     }
 
     public Sender getSenderAt(int index) {

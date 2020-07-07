@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class ReceiveBridge : BridgeComponent {
 
-    public ReceiveBridge(Vector2Int position, int rotation, bool flipped, int length) : 
-        base(position, new Vector2Int(length,1), rotation, flipped, length, 0) {
+    private List<SendBridge> sendBridges = new List<SendBridge>();
 
-        this.length = length;
+    public ReceiveBridge(Vector2Int position, int rotation, bool flipped) : 
+        base(position, new Vector2Int(BridgeComponent.BRIDGELENGTH,1), rotation, flipped, BridgeComponent.BRIDGELENGTH, 0) {
+;
     }
 
-    public ReceiveBridge(Vector2Int position, int rotation, bool flipped, int length, string name) : 
-        base(position, new Vector2Int(length, 1), rotation, flipped, length, 0, name) {
-
-        this.length = length;
+    public ReceiveBridge(Vector2Int position, int rotation, bool flipped, string name) : 
+        base(position, new Vector2Int(BridgeComponent.BRIDGELENGTH, 1), rotation, flipped, BridgeComponent.BRIDGELENGTH, 0, name) {
     }
 
     public void setState(int signal) {
@@ -24,20 +23,45 @@ public class ReceiveBridge : BridgeComponent {
 
         //Debug.Log("ReceiveBridge - setState - check state:" + checkState);
 
-        if(checkState > this.state) {
+        if(checkState != this.state) {
 
             this.state = checkState;
 
             for (int i = 0; i < this.senders.Count; i++) {
 
-                if (((this.state >> i) & 1) == 1) {
+                int index = (this.senders.Count - 1 - i);
+
+                if (((this.state >> index) & 1) == 1) {
                     this.senders[i].setTargetsActive();
                 }
             }
         }
     }
 
+    public override void setValues(List<Tuple> values) {
+        //sets the receivers to the correct value
+
+        this.setState(int.Parse(values[0].Value));
+        this.Name = values[1].Value;
+    }
+
     public void clearState() {
         this.state = 0;
+    }
+
+    public override void clearConnections() {
+        //clears all the connections
+
+        foreach(SendBridge send in this.sendBridges) {
+            bool removed = send.ReceiveBridges.Remove(this);
+            Debug.Log("removed " + send + " " + removed);
+        }
+        this.sendBridges.Clear();
+    }
+
+    public List<SendBridge> SendBridges {
+        get {
+            return this.sendBridges;
+        }
     }
 }

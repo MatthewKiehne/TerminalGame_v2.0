@@ -4,11 +4,16 @@ Prefabs/LogicComponents/BasicLogicComponent
 Prefabs/Graphs/Graph
 Prefabs/Connections/Ray
 Prefabs/Window/Window
+Prefabs/GeranlContents/EnterTextPanel
 Prefabs/WindowGUI/EmptyList
 Prefabs/WindowGUI/TerminalInfo
 Prefabs/WindowGUI/GraphEditor
+Prefabs/WindowGUI/TerminalConnections
+Prefabs/WindowGUI/Connection
 Prefabs/BasicGUI/BasicButton
+Prefabs/BasicGUI/Panel
 Prefabs/BasicGUI/Image
+Prefabs/BasicGUI/Dropdown
 Sprites/LogicGates/And
 Sprites/LogicGates/Buffer
 Sprites/LogicGates/Nand

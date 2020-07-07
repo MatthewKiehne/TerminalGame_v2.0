@@ -27,7 +27,7 @@ public class LogicGraphContent : WindowContent {
     private bool flipped = false;
 
     //this is the component being show on the screen
-    private Type componentType = null;
+    private LightComponent component = null;
 
     //the mouse objet
     private GameObject mouseObject = null;
@@ -119,70 +119,67 @@ public class LogicGraphContent : WindowContent {
         Button xnorButton = basePanel.Find("XnorButton").GetComponent<Button>();
         Button reflector = basePanel.Find("ReflectorButton").GetComponent<Button>();
         Button splitterButton = basePanel.Find("SplitterButton").GetComponent<Button>();
-        /*
         Button sendBridgeButton = basePanel.Find("SendBridgeButton").GetComponent<Button>();
         Button receiveBridgeButton = basePanel.Find("ReceiveBridgeButton").GetComponent<Button>();
-        */
         Button deleteButton = basePanel.Find("DeleteButton").GetComponent<Button>();
-        
+
         //adds the component to the button
         andButton.onClick.AddListener(() => {
-            this.componentType = typeof(AndGate);
+            this.component = new AndGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         orButton.onClick.AddListener(() => {
-            this.componentType = typeof(OrGate);
+            this.component = new OrGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         notButton.onClick.AddListener(() => {
-            this.componentType = typeof(NotGate);
+            this.component = new NotGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         bufferButton.onClick.AddListener(() => {
-            this.componentType = typeof(BufferGate);
+            this.component = new BufferGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         norButton.onClick.AddListener(() => {
-            this.componentType = typeof(NorGate);
+            this.component = new NorGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         xorButton.onClick.AddListener(() => {
-            this.componentType = typeof(XorGate);
+            this.component = new XorGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         xnorButton.onClick.AddListener(() => {
-            this.componentType = typeof(XnorGate);
+            this.component = new XnorGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         nandButton.onClick.AddListener(() => {
-            this.componentType = typeof(NandGate);
+            this.component = new NandGate(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         splitterButton.onClick.AddListener(() => {
-            this.componentType = typeof(Splitter);
+            this.component = new Splitter(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         reflector.onClick.AddListener(() => {
-            this.componentType = typeof(Reflector);
+            this.component = new Reflector(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
-        /*
         sendBridgeButton.onClick.AddListener(() => {
-            this.component = new SendBridge(this.previousGridPosition, this.rotation, this.flipped, 8);
+            this.component = new SendBridge(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
         receiveBridgeButton.onClick.AddListener(() => {
-            this.component = new ReceiveBridge(this.previousGridPosition, this.rotation, this.flipped, 8);
+            this.component = new ReceiveBridge(this.previousGridPosition, this.rotation, this.flipped);
             this.changeComponent();
         });
-        */
+
         deleteButton.onClick.AddListener(() => {
             this.currentState = EditorState.DeleteComponent;
             this.destroyMouseChildren();
             GameObject xSprite = this.makeX().gameObject;
             xSprite.transform.SetParent(this.mouseObject.transform);
             xSprite.transform.localPosition = new Vector2(.5f, .5f);
-           
+
         });
 
         //selects the first button
@@ -217,35 +214,42 @@ public class LogicGraphContent : WindowContent {
 
             if (this.logicGraphController.BottomLeftWorld != this.previousGridPosition) {
 
-                this.previousGridPosition = this.getMouseLocalGridPosition();
+                Vector2Int currentMousePos = this.getMouseLocalGridPosition();
 
-                if (this.currentState == EditorState.AddCompoent) {
+                if (!this.previousGridPosition.Equals(currentMousePos)) {
 
-                    LightComponent made = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
-                    bool canPlace = this.logicGraphController.Graph.canPlace(made);
-                   
-                    this.mouseObject.transform.Find("X").gameObject.SetActive(!canPlace);
-                    Vector2 worldMousePosition = this.getMouseWorldGridPosition();
-                    this.mouseObject.transform.position = worldMousePosition;
-                    //Debug.Log(this.mouseObject.transform.position + " " + this.mouseObject.transform.GetChild(0).position);
+                    this.previousGridPosition = currentMousePos;
 
-                } else if (this.currentState == EditorState.DeleteComponent) {
-                    /*
-                    GraphComponent hitComponent = this.graph.getComponentAt(gridPosition.x, gridPosition.y);
-                    Debug.Log(hitComponent);
-                    */
-                    Vector2 worldMousePosition = this.getMouseWorldGridPosition();
-                    this.mouseObject.transform.position = worldMousePosition;
+                    if (this.currentState == EditorState.AddCompoent) {
 
-                    GraphComponent graphComp = this.logicGraphController.Graph.getComponentAt(
-                        this.previousGridPosition.x, this.previousGridPosition.y);
 
-                    SpriteRenderer rend = this.mouseObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
+                        //LightComponent made = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+                        this.component.Position = this.previousGridPosition;
+                        bool canPlace = this.logicGraphController.Graph.canPlace(this.component);
 
-                    if(graphComp != null) {
-                        rend.color = Color.red;
-                    } else {
-                        rend.color = Color.gray;
+                        this.mouseObject.transform.Find("X").gameObject.SetActive(!canPlace);
+                        Vector2 worldMousePosition = this.getMouseWorldGridPosition();
+                        this.mouseObject.transform.position = worldMousePosition;
+                        //Debug.Log(this.mouseObject.transform.position + " " + this.mouseObject.transform.GetChild(0).position);
+
+                    } else if (this.currentState == EditorState.DeleteComponent) {
+                        /*
+                        GraphComponent hitComponent = this.graph.getComponentAt(gridPosition.x, gridPosition.y);
+                        Debug.Log(hitComponent);
+                        */
+                        Vector2 worldMousePosition = this.getMouseWorldGridPosition();
+                        this.mouseObject.transform.position = worldMousePosition;
+
+                        GraphComponent graphComp = this.logicGraphController.Graph.getComponentAt(
+                            this.previousGridPosition.x, this.previousGridPosition.y);
+
+                        SpriteRenderer rend = this.mouseObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
+
+                        if (graphComp != null) {
+                            rend.color = Color.red;
+                        } else {
+                            rend.color = Color.gray;
+                        }
                     }
                 }
             }
@@ -256,25 +260,63 @@ public class LogicGraphContent : WindowContent {
 
             if (this.currentState == EditorState.AddCompoent) {
                 //adds the component
-                LightComponent comp = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+                LightComponent comp = this.duplicateAt(this.component.GetType(), this.previousGridPosition, this.rotation, this.flipped);
 
                 if (this.logicGraphController.Graph.canPlace(comp) &&
                 this.inputs.CurrentFrameData.RaycastResults.Count != 0 &&
                 this.inputs.CurrentFrameData.RaycastResults[0].gameObject.Equals(this.rawImage.gameObject)) {
 
-                    this.logicGraphController.Graph.addComponentAndConnect(comp);
-                    GraphComponentController gcc = this.logicGraphController.ComponentManager.createComponent(comp);
-                    this.logicGraphController.ComponentManager.addComponent(gcc);
-                    this.logicGraphController.ComponentManager.reconnectRays();
+                    if (comp.GetType().IsSubclassOf(typeof(BridgeComponent))) {
 
+                        EnterTextContent etc = new EnterTextContent("Type in a unique name for the Bridge." +
+                            " The name can not be the same as another bridge on this Graph", (string inputFieldText) => {
+                            //confrim
+                            ((BridgeComponent)comp).Name = inputFieldText;
+                            addComponentToGraph(comp);
+                            },
+                            () => {
+                            }, 15);
+
+                        //names exits
+                        etc.addErrorCheck((string value) => {
+
+                            bool result = true;
+                            int counter = 0;
+
+                            List<BridgeComponent> checkBridges = this.logicGraphController.Graph.AllBridges();
+
+                            while(result && counter < checkBridges.Count) {
+
+                                if (value.Equals(checkBridges[counter].Name)) {
+                                    result = false;
+                                }
+
+                                counter++;
+                            }
+
+                            return result;
+
+                        }, "Name Already Exits");
+
+                        //can place component after entering value
+                        etc.addErrorCheck((string value) => {
+                            return this.logicGraphController.Graph.canPlace(comp);
+                        }, "Can not Place there");
+
+                        WindowManager.Instance.spawnWindow(new Window(comp.GetType() + " Name", 200, 200, etc));
+
+                    } else {
+
+                        this.addComponentToGraph(comp);
+                    }
                 }
-            } else if(currentState == EditorState.DeleteComponent) {
+            } else if (currentState == EditorState.DeleteComponent) {
                 //removes the component
 
                 Vector2Int gridPosition = this.getMouseLocalGridPosition();
                 LightComponent hitComponent = this.graph.getComponentAt(gridPosition.x, gridPosition.y);
 
-                if(hitComponent != null) {
+                if (hitComponent != null) {
 
                     //Debug.Log("LogicGraphContent -> Delete: hit " + hitComponent);
                     bool removedGOState = this.logicGraphController.ComponentManager.removeComponent(hitComponent);
@@ -293,6 +335,13 @@ public class LogicGraphContent : WindowContent {
         #endregion
     }
 
+    private void addComponentToGraph(LightComponent comp) {
+        this.logicGraphController.Graph.addComponentAndConnect(comp);
+        GraphComponentController gcc = this.logicGraphController.ComponentManager.createComponent(comp);
+        this.logicGraphController.ComponentManager.addComponent(gcc);
+        this.logicGraphController.ComponentManager.reconnectRays();
+    }
+
     private Vector2 getMouseWorldPoint() {
         //gets the world point for the mouse
 
@@ -303,7 +352,7 @@ public class LogicGraphContent : WindowContent {
             new Vector2(this.rawImageRect.sizeDelta.x / 2f, this.rawImageRect.sizeDelta.y / 2f);
 
         Vector2 veiwPort = (mousePos - bottomLeftImage) / this.rawImageRect.sizeDelta;
-        
+
         return this.camera.ViewportToWorldPoint(veiwPort);
 
         //return worldPoint = new Vector2(Mathf.Floor(worldPoint.x), Mathf.Floor(worldPoint.y));
@@ -366,9 +415,9 @@ public class LogicGraphContent : WindowContent {
         } else if (type == typeof(Reflector)) {
             result = new Reflector(position, rotation, flipped);
         } else if (type == typeof(SendBridge)) {
-            result = new SendBridge(position, rotation, flipped, 8);
+            result = new SendBridge(position, rotation, flipped);
         } else if (type == typeof(ReceiveBridge)) {
-            result = new ReceiveBridge(position, rotation, flipped, 8);
+            result = new ReceiveBridge(position, rotation, flipped);
         } else {
             throw new System.Exception(type + " was not found when selecting the from the logic graph editor");
         }
@@ -383,7 +432,7 @@ public class LogicGraphContent : WindowContent {
 
         this.destroyMouseChildren();
 
-        LightComponent madeComponent = this.duplicateAt(this.componentType, this.previousGridPosition, this.rotation, this.flipped);
+        LightComponent madeComponent = this.duplicateAt(this.component.GetType(), this.previousGridPosition, this.rotation, this.flipped);
 
         GraphComponentController gcc = this.logicGraphController.ComponentManager.createComponent(madeComponent);
         gcc.transform.SetParent(this.mouseObject.transform);

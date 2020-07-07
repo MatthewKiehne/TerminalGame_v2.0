@@ -24,13 +24,8 @@ public class BridgeComponentController : InteractiveComponentController {
         Vector3 moveDirection  = new Vector3(0, -.45f, 0);
         if(graphComponent.GetType() == typeof(SendBridge)) {
             moveDirection.y = -moveDirection.y;
-            Debug.Log("Here");
         }
         middle.localPosition = moveDirection;
-
-
-
-
 
         //adds the canvas to the component
         SpriteRenderer rend = middle.GetChild(0).GetComponent<SpriteRenderer>();

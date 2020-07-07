@@ -11,5 +11,4 @@ public abstract class Receiver : ComponentPiece {
     public abstract void setActive(bool active);
 
     public abstract bool getActive();
-
 }

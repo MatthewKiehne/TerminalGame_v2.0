@@ -82,6 +82,7 @@ public class LoadTerminalContent : WindowContent {
 
                     //terminal creation
                     DirectoryInfo info = new DirectoryInfo(ter);
+
                     string terJsonPath = ter + "/" + info.Name + ".json";
                     TerminalData terData = Save.loadJson<TerminalData>(terJsonPath);
                     Terminal terminal = new Terminal(terData);
@@ -101,6 +102,11 @@ public class LoadTerminalContent : WindowContent {
                             terminal.addComponent(lg);
                         }
                     }
+
+                    //connects the TExtensions
+                    string TExtConnectionPath = ter + "/" + "TExtensionConnectionsData.json";
+                    TExtensionConnectionsData connectionData = Save.loadJson<TExtensionConnectionsData>(TExtConnectionPath);
+                    connectionData.buildConnections(terminal);
 
                     terminalManager.displayTerminal(terminal);
                 }

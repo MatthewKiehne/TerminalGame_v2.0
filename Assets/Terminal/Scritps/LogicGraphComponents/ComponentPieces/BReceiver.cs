@@ -13,10 +13,14 @@ public class BReceiver : Receiver {
     }
 
     public override bool getActive() {
-        throw new System.NotImplementedException();
+        return true;
     }
 
     public override void setActive(bool active) {
-        
+        //sends this receiver's value to the receiver as soon as it is activated
+
+        if (active) {
+            this.sendBridge.sendData(this.stateNumber);
+        }
     }
 }

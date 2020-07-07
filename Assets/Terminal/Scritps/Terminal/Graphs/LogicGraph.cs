@@ -31,9 +31,9 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
             Type type = Type.GetType(gcd.Type);
             LightComponent lightComponent = null;
 
-            if (type.IsSubclassOf(typeof(LogicComponent))) {
+            if( type.IsSubclassOf(typeof(LightComponent))) {
 
-                LogicComponent logic = (LogicComponent)Activator.CreateInstance(
+                lightComponent = (LightComponent)Activator.CreateInstance(
                     type,
                     new object[] {
                         new Vector2Int(gcd.Position[0], gcd.Position[1]),
@@ -41,20 +41,11 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
                         gcd.Flipped
                     });
 
-                //sets state of the component
-                logic.setState();
+                if (type.IsSubclassOf(typeof(LogicComponent))) {
 
-                lightComponent = logic;
-
-            } else if (type.IsSubclassOf(typeof(PassiveComponent))) {
-
-                lightComponent = (PassiveComponent)Activator.CreateInstance(
-                    type,
-                    new object[] {
-                        new Vector2Int(gcd.Position[0], gcd.Position[1]),
-                        gcd.Rotaiton,
-                        gcd.Flipped
-                    });
+                    LogicComponent logic = (LogicComponent)lightComponent;
+                    logic.setState();
+                }
 
             } else {
                 throw new Exception("Type " + type + " is not accepted from LogicGraphData");
@@ -456,9 +447,14 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
                     result = this.passiveComponents.Remove((PassiveComponent)component);
                 } else if (component.GetType().IsSubclassOf(typeof(BridgeComponent))) {
                     if (component.GetType() == typeof(ReceiveBridge)) {
-                        result = this.ReceiveBridges.Remove((ReceiveBridge)component);
+
+                        ReceiveBridge rec = (ReceiveBridge)component;
+                        rec.clearConnections();
+                        result = this.ReceiveBridges.Remove(rec);
                     } else if (component.GetType() == typeof(SendBridge)) {
-                        result = this.sendBridges.Remove((SendBridge)component);
+                        SendBridge send = (SendBridge)component;
+                        send.clearConnections();
+                        result = this.sendBridges.Remove(send);
                     } else {
                         throw new System.Exception(component.GetType() + " can not be removed to the Logic Graph");
                     }
@@ -524,7 +520,7 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
     #region TExtension
 
     public override void setState() {
-        foreach (LogicComponent lc in this.getAllInteractiveComponents()) {
+        foreach (LogicComponent lc in this.logicComponents) {
             lc.setState();
             //Debug.Log("set state:" + lc.GetType().ToString() + " " + lc.Position + " state:" + lc.getState());
         }

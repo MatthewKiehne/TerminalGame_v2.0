@@ -7,11 +7,17 @@ public class WindowManager : MonoBehaviour {
     //public GameObject sampleGUIPrefab;
     //public GameObject sampleInViewPrefab;
 
+    public static WindowManager Instance;
+
     [SerializeField]
     private Canvas useCanvas;
 
 	private List<WindowController> windows = new List<WindowController> ();
     private bool allowSpawnWindows = true;
+
+    public void Awake() {
+        WindowManager.Instance = this;
+    }
 
     public bool windowAlreadyExists(WindowContent contents) {
         //checks to see if the window already exists
@@ -80,7 +86,7 @@ public class WindowManager : MonoBehaviour {
         return this.spawnWindow(this.useCanvas, window);
     }
 
-    private WindowController getControllerByData(WindowContent content) {
+    public WindowController getControllerByData(WindowContent content) {
         //gets the controller based by the content
 
 
@@ -153,7 +159,6 @@ public class WindowManager : MonoBehaviour {
 
 		//destroys the window when clicked
 		GameObject.Destroy(controller.gameObject);
-
 
 		//makes the next window active
 		if (this.windows.Count > 0) {

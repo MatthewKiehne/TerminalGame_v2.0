@@ -58,7 +58,7 @@ public class TempSceneInit : MonoBehaviour {
         List<Terminal> terms = new List<Terminal>();
         terms.Add(firstTerminal);
         //this.allTerminals.Add(secondTerminal);
-        //this.allTerminals.Add(emptyTerminal);
+        terms.Add(emptyTerminal);
 
         GameObject terminalManagerGO = new GameObject("Terminal Manager");
         this.terminalManager = terminalManagerGO.AddComponent<TerminalManager>();
@@ -92,46 +92,55 @@ public class TempSceneInit : MonoBehaviour {
 
         string path = Application.dataPath + "/Saves/Resources/Saves";
 
-        string illegal = System.DateTime.Now.ToString();
-        string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-        Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-        illegal = r.Replace(illegal, " ");
+        EnterTextContent saveContent = new EnterTextContent("Enter in the name for your save", (string enteredText) => {
 
-        Save.makeDirectory(path, illegal);
+            string illegal = enteredText + "~" + System.DateTime.Now.ToString();
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            illegal = r.Replace(illegal, " ");
 
-        path += "/" + illegal + "/";
+            Save.makeDirectory(path, illegal);
 
-        string terminalFolder = "Terminals";
-        Save.makeDirectory(path, terminalFolder);
+            path += "/" + illegal + "/";
 
-        path += "/" + terminalFolder;
+            string terminalFolder = "Terminals";
+            Save.makeDirectory(path, terminalFolder);
+
+            path += "/" + terminalFolder;
 
 
-        foreach(TerminalController ter in this.terminalManager.TerminalControllers) {
+            foreach (TerminalController ter in this.terminalManager.TerminalControllers) {
 
-            //makes terminal directory
-            Save.makeDirectory(path, ter.Terminal.Name);
-            string tempPath = path + "/" + ter.Terminal.Name + "/";
+                //makes terminal directory
+                Save.makeDirectory(path, ter.Terminal.Name);
+                string tempPath = path + "/" + ter.Terminal.Name + "/";
 
-            //saves terminal json
-            Save.saveJson<TerminalData>(new TerminalData(ter.Terminal), tempPath, ter.Terminal.Name + ".json");
+                //saves terminal json
+                Save.saveJson<TerminalData>(new TerminalData(ter.Terminal), tempPath, ter.Terminal.Name + ".json");
 
-            //makes directory for logic graphs
-            Save.makeDirectory(tempPath, "LogicGraphs");
-            tempPath += "/LogicGraphs";
+                //saves the connections 
+                Save.saveJson<TExtensionConnectionsData>(new TExtensionConnectionsData(ter.Terminal), tempPath, typeof(TExtensionConnectionsData).ToString() + ".json");
 
-            for (int i = 0; i < ter.Terminal.getExtentionLength(); i++) {
+                //makes directory for logic graphs
+                Save.makeDirectory(tempPath, "LogicGraphs");
+                tempPath += "/LogicGraphs";
 
-                TExtension extension = ter.Terminal.getExtentionAt(i);
-                if(extension.GetType() == typeof(LogicGraph)) {
+                for (int i = 0; i < ter.Terminal.extensionLength(); i++) {
 
-                    string name = extension.Name + ".json";
+                    TExtension extension = ter.Terminal.extensionAt(i);
+                    if (extension.GetType() == typeof(LogicGraph)) {
 
-                    LogicGraph lg = (LogicGraph)extension;
-                    Save.saveJson<LogicGraphData>(new LogicGraphData(lg), tempPath, name);
+                        string name = extension.Name + ".json";
+
+                        LogicGraph lg = (LogicGraph)extension;
+                        Save.saveJson<LogicGraphData>(new LogicGraphData(lg), tempPath, name);
+                    }
                 }
             }
-        }
+
+        }, () => { }, 50);
+
+        WindowManager.Instance.spawnWindow(new Window("Save Game", 200, 200, saveContent));
     }
 
     public void loadButton() {

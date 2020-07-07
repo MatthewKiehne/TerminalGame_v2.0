@@ -21,7 +21,16 @@ public abstract class TExtension : GraphComponent {
 
     //clears the receivers of all data they have received
     public abstract void clearReceivers();
-        
+
+    public List<BridgeComponent> AllBridges() {
+
+        List<BridgeComponent> result = new List<BridgeComponent>();
+
+        result.AddRange(this.sendBridges);
+        result.AddRange(this.receiveBridges);
+
+        return result;
+    }     
 
     public List<ReceiveBridge> ReceiveBridges {
         get {
