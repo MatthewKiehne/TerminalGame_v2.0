@@ -1,0 +1,45 @@
+~ used to display logic gates in the logic graphs
+Default/Prefabs/LogicGraph/MirrorBase
+Default/Prefabs/LogicGraph/PassingMirror
+Default/Prefabs/LogicGraph/BasicLogicComponent
+Default/Prefabs/LogicGraph/LGBridgeLabel
+Default/Prefabs/LogicGraph/Graph
+Default/Prefabs/LogicGraph/Ray
+
+~ loads in all the sprites for logic gates
+Default/Sprites/LogicGates/And
+Default/Sprites/LogicGates/Buffer
+Default/Sprites/LogicGates/Nand
+Default/Sprites/LogicGates/Nor
+Default/Sprites/LogicGates/Not
+Default/Sprites/LogicGates/Or
+Default/Sprites/LogicGates/Xnor
+Default/Sprites/LogicGates/Xor
+
+~ Used by the window manager to instanciate new windows
+Default/Prefabs/Window/Window
+
+~ all the contents for the windows being displayed
+Default/Prefabs/WindowGUI/EmptyList
+Default/Prefabs/WindowGUI/TerminalInfo
+Default/Prefabs/WindowGUI/GraphEditor
+Default/Prefabs/WindowGUI/TerminalConnections
+Default/Prefabs/WindowGUI/Connection
+
+~ helps make custom menues at runtime
+Default/Prefabs/BasicGUI/BasicButton
+Default/Prefabs/BasicGUI/Panel
+Default/Prefabs/BasicGUI/Image
+Default/Prefabs/BasicGUI/Dropdown
+
+~ all the basic shapes needed to make complex 
+Default/Sprites/BasicShapes/Square
+Default/Sprites/BasicShapes/Circle
+Default/Sprites/BasicShapes/Triangle
+Default/Sprites/BasicShapes/X
+
+~ primarly used by the camera manager
+Default/Prefabs/Camera/Camera
+
+~ general purpose window content
+Default/Prefabs/GeneralWidows/EnterTextPanel

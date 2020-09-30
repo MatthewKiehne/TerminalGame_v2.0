@@ -23,9 +23,6 @@ public class LogicGraphData
         this.Width = graph.Width;
         this.Height = graph.Height;
 
-        this.position[0] = graph.Position.x;
-        this.position[1] = graph.Position.y;
-
         List<LightComponent> comps = graph.getAllGraphComponents();
         foreach(LightComponent comp in comps) {
 

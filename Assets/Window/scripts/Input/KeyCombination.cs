@@ -25,79 +25,37 @@ public class KeyCombination {
 		this.status = status;
 	}
 
-	public bool active(InputData data){
-		//same as above
+    public bool active(InputData data) {
+        //same as above
 
-		/*
-		List<KeyCode> codes = data.Down;
+        bool result = true;
+        //get the status
+        int counter = 0;
 
-		if (this.status == KeyStatus.Held) {
-			codes = data.Held;
-		} else if (this.status == KeyStatus.Up) {
-			codes = data.Up;
-		} else if(this.status == KeyStatus.Rest){
-			codes = data.Rest;
-		}
+        while (result && counter < this.combination.Count) {
 
-		return this.active (codes, this.status);
-		*/
+            switch (this.status) {
+                case KeyStatus.Down:
+                    result = Input.GetKeyDown(this.combination[counter]);
+                    break;
+                case KeyStatus.Held:
+                    result = Input.GetKey(this.combination[counter]);
+                    break;
+                case KeyStatus.Up:
+                    result = Input.GetKeyUp(this.combination[counter]);
+                    break;
+                case KeyStatus.Rest:
+                    result = (!Input.GetKey(this.combination[counter]) &&
+                    !Input.GetKeyDown(this.combination[counter]) &&
+                    !Input.GetKeyUp(this.combination[counter]));
+                    break;
 
-		bool result = true;
-		//get the status
-		int counter = 0;
+            }
 
-		while (result && counter < this.combination.Count) {
-
-			//checks key down
-			if (this.status == KeyStatus.Down) {
-				result = Input.GetKeyDown (this.combination [counter]);
-
-			//checks the key held
-			} else if (this.status == KeyStatus.Held) {
-				result = Input.GetKey (this.combination [counter]);
-
-			//checks the key up
-			} else if (this.status == KeyStatus.Up) {
-				result = Input.GetKeyUp (this.combination [counter]);
-
-			//chekcs the key is at rest
-			} else {
-				result = (!Input.GetKey (this.combination [counter]) && 
-					!Input.GetKeyDown (this.combination [counter]) && 
-					!Input.GetKeyUp (this.combination [counter]));
-			}
-
-			counter++;
-		}
-		return result;
-	}
-
-	/*
-	public bool active(List<KeyCode> keys, KeyStatus status){
-		//retuns true if the combination is a subset of the keys
-
-		bool result = true;
-		int comIndex = 0;
-
-		//makes sure it is the same status
-		if (this.status != status) {
-			result = false;
-		}
-
-		//loops through all the combination keycodes
-		while (result && comIndex < combination.Count) {
-
-			//the keys does not holds one of the combination keys
-			if (!keys.Contains (this.combination [comIndex])) {
-				result = false;
-			}
-			comIndex++;
-		}
-
-		return result;
-	}
-
-	*/
+            counter++;
+        }
+        return result;
+    }
 
 	public bool sameCombination(KeyCombination comb){
 		//retuns true if all the same keys are in both combinations

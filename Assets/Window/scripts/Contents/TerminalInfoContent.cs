@@ -58,7 +58,7 @@ public class TerminalInfoContent : WindowContent {
         EnterTextContent content = new EnterTextContent("Give a unique name to the graph", (string enteredText) =>
         {
 
-            this.terminalController.Terminal.addExtension(new LogicGraph(100, 100, enteredText, Vector2Int.zero));
+            this.terminalController.Terminal.addExtension(new LogicGraph(100, 100, enteredText));
             this.refreshExtensionList();
 
         }, () => { }, 50);

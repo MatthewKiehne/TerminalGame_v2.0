@@ -7,13 +7,7 @@ using UnityEngine;
 
 public class TempSceneInit : MonoBehaviour {
 
-    //private List<Terminal> terminals = new List<Terminal>();
     private TerminalManager terminalManager;
-
-    //private List<Terminal> allTerminals;
-
-    [SerializeField]
-    private Sprite truthTableSprite;
 
     [SerializeField]
     private Sprite logicGraphControls;
@@ -21,7 +15,7 @@ public class TempSceneInit : MonoBehaviour {
     void Start() {
 
         //reads the game objects into memory
-        TextAsset text = Resources.Load<TextAsset>("Text/InitSceneLoad/GameScene");
+        TextAsset text = Resources.Load<TextAsset>("Default/Text/InitSceneLoad/GameScene");
 
         if (text != null) {
             StringReader strReader = new StringReader(text.text);
@@ -29,42 +23,45 @@ public class TempSceneInit : MonoBehaviour {
             string line = strReader.ReadLine();
 
             while (line != null) {
-                SceneResouces.loadResources(line);
+
+                if (!line.Equals("") && !line.StartsWith("~") ) {
+                    SceneResouces.loadResources(line);
+                }
+                
                 line = strReader.ReadLine();
             }
         } else {
-            Debug.Log("txt not found");
+            Debug.LogError("txt not found");
         }
 
-        //Sprite sprite = Resources.Load<Sprite>("Sprites/LogicGates/And");
+        Terminal firstTerminal = new Terminal("First Test Terminal", new Clock(1f));
 
-        Terminal firstTerminal = new Terminal("First Test Terminal");
-
-        Clock newClock = new Clock(5, 0, true, true);
-        firstTerminal.Clock = newClock;
-
-        LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph",Vector2Int.zero);
+        LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph");
         firstTerminal.addComponent(emptyGraph);
 
-        Terminal secondTerminal = new Terminal("Second Terminal");
-        secondTerminal.addComponent(new LogicGraph(20, 20, "Mini Graph", Vector2Int.zero));
 
-        Terminal emptyTerminal = new Terminal("Blank Graphs");
+        Terminal emptyTerminal = new Terminal("Blank Graphs", new Clock(2f));
         for(int i = 0; i < 10; i++) {
-            LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1), Vector2Int.zero);
+            LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1));
             emptyTerminal.addComponent(tempEmptyGraph);
         }
 
+        emptyTerminal.addComponent(new TInput("H"));
+
         List<Terminal> terms = new List<Terminal>();
         terms.Add(firstTerminal);
-        //this.allTerminals.Add(secondTerminal);
         terms.Add(emptyTerminal);
 
         GameObject terminalManagerGO = new GameObject("Terminal Manager");
         this.terminalManager = terminalManagerGO.AddComponent<TerminalManager>();
-        
-        foreach(Terminal ter in terms) {
-            this.terminalManager.displayTerminal(ter);
+
+        Terminal[] terminals = new Terminal[] { firstTerminal, emptyTerminal };
+
+        foreach(Terminal terminal in terminals) {
+            GameObject go = new GameObject(terminal.Name);
+            TerminalController terminalController = go.AddComponent<TerminalController>();
+            terminalController.setUp(terminal);
+            this.terminalManager.TerminalControllers.Add(terminalController);
         }
     }
 
@@ -80,17 +77,10 @@ public class TempSceneInit : MonoBehaviour {
         wm.spawnWindow(win);
     }
 
-    public void updateAllTerminals() {
-        //updates all the terminals
-
-        this.updateData();
-        this.updateVisuals();
-        
-    }
-
     public void saveButton() {
+        //saves the current state of all the terminals
 
-        string path = Application.dataPath + "/Saves/Resources/Saves";
+        string path = Application.dataPath + "/Default/Resources/Default/Saves";
 
         EnterTextContent saveContent = new EnterTextContent("Enter in the name for your save", (string enteredText) => {
 
@@ -155,16 +145,5 @@ public class TempSceneInit : MonoBehaviour {
 
         //disable other window from spawning
         wm.AllowSpawnWindows = false;
-    }
-
-    private void updateVisuals() {
-        this.terminalManager.updateAllTerminalVisuals();
-    }
-
-    private void updateData() {
-
-        foreach(TerminalController terCon in this.terminalManager.TerminalControllers) {
-            terCon.Terminal.update();
-        }
     }
 }

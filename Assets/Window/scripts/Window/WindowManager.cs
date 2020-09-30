@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class WindowManager : MonoBehaviour {
 
-    //public GameObject sampleGUIPrefab;
-    //public GameObject sampleInViewPrefab;
-
     public static WindowManager Instance;
 
     [SerializeField]
@@ -106,30 +103,6 @@ public class WindowManager : MonoBehaviour {
     }
 
 	public void giveActiveWindowInputs(InputData data){
-
-		//checks to see if the window was clicked on
-		if (Input.GetKeyDown(KeyCode.Mouse0)) {
-
-			//tries to find the first Window Controller
-			WindowController firstWindow = null;
-			int hitIndex = 0;
-			while (hitIndex < data.RaycastResults.Count && firstWindow == null) {
-
-				WindowController con = data.RaycastResults [hitIndex].gameObject.GetComponent<WindowController> ();
-
-				if (con != null) {
-
-					firstWindow = con;
-				}
-			
-				hitIndex++;
-			}
-
-			if (firstWindow != null) {
-				//makes the first window active
-				this.makeActive (firstWindow);
-			}
-		}
 		
 		//gives the active window the keyboard iputs
 
@@ -151,6 +124,33 @@ public class WindowManager : MonoBehaviour {
 
 		return result;
 	}
+
+    public bool mouseOverWindow(InputData data) {
+        //checks to see if the click was over a window
+
+        //tries to find the first Window Controller
+        WindowController firstWindow = null;
+        int hitIndex = 0;
+        while (hitIndex < data.RaycastResults.Count && firstWindow == null) {
+
+            WindowController con = data.RaycastResults[hitIndex].gameObject.GetComponent<WindowController>();
+
+            if (con != null) {
+
+                firstWindow = con;
+            }
+
+            hitIndex++;
+        }
+
+        if (firstWindow != null) {
+            //makes the first window active
+            this.makeActive(firstWindow);
+        }
+
+        return firstWindow != null;
+
+    }
 
 	public void removeWindow(WindowController controller){
 
@@ -213,5 +213,5 @@ public class WindowManager : MonoBehaviour {
         set {
             this.allowSpawnWindows = value;
         }
-    }
+    } 
 }

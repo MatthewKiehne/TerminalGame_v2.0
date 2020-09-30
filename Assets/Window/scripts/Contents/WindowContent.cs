@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class WindowContent {
 
-    protected WindowInput inputs;
+    protected InputActions inputs;
     protected bool fixxedSize = false;
     protected bool movable = true;
 
     public WindowContent() {
-        this.inputs = new WindowInput();
+        this.inputs = new InputActions();
     }
 
     public abstract void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas);
@@ -39,7 +39,7 @@ public abstract class WindowContent {
         return result;
     }
 
-    public WindowInput Inputs {
+    public InputActions Inputs {
         get {
             return inputs;
         }

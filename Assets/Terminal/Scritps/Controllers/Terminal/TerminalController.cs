@@ -26,7 +26,7 @@ public class TerminalController : MonoBehaviour {
         }
     }
 
-    public void updateVisuals() {
+    private void updateVisuals() {
 
         logicGraphManager.updateAllLogicGraphVisuals();
     }

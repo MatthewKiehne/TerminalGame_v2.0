@@ -14,13 +14,13 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
     public const int MaxRayDistance = 1000;
     public const int maxBounces = 16;
 
-    public LogicGraph(int width, int height, string name, Vector2Int position) : base(name, position) {
+    public LogicGraph(int width, int height, string name) : base(name) {
 
         this.width = width;
         this.height = height;
     }
 
-    public LogicGraph(LogicGraphData data) : base(data.Name, new Vector2Int(data.position[0], data.position[1])) {
+    public LogicGraph(LogicGraphData data) : base(data.Name) {
         //loads the logic graph from data
 
         this.width = data.Width;
@@ -547,14 +547,6 @@ public class LogicGraph : TExtension, GraphInteger<LightComponent> {
     }
 
     #endregion
-
-    public override List<Tuple> getValues() {
-        throw new NotImplementedException();
-    }
-
-    public override void setValues(List<Tuple> values) {
-        throw new NotImplementedException();
-    }
 
     public int Width {
         get {

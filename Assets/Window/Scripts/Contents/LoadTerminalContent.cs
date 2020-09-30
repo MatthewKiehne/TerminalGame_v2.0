@@ -40,7 +40,7 @@ public class LoadTerminalContent : WindowContent {
         gui.transform.SetParent(contentPanel, false);
 
         //gets the directories in order of creation
-        string path = Application.dataPath + "/Saves/Resources/Saves";
+        string path = Application.dataPath + "/Default/Resources/Default/Saves";
         DirectoryInfo di = new DirectoryInfo(path);
         List<string> order = di.EnumerateDirectories().OrderBy(d => d.CreationTime).Select(d => d.Name).ToList();
 
@@ -108,7 +108,7 @@ public class LoadTerminalContent : WindowContent {
                     TExtensionConnectionsData connectionData = Save.loadJson<TExtensionConnectionsData>(TExtConnectionPath);
                     connectionData.buildConnections(terminal);
 
-                    terminalManager.displayTerminal(terminal);
+                    //terminalManager.displayTerminal(terminal);
                 }
 
                 //clear all the windows

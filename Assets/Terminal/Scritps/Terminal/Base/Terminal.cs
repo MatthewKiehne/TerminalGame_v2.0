@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Terminal {
 
+    private string name;
     private Clock clock;
 
     private List<TExtension> extensions = new List<TExtension>();
 
-    private string name;
-
     public Terminal(string name) {
         this.name = name;
+    }
+
+    public Terminal(string name, Clock clock) {
+        this.name = name;
+        this.clock = clock;
     }
 
     public TExtension findExtension(string name) {
@@ -30,16 +34,11 @@ public class Terminal {
         if (this.clock != null) {
 
             numUpdates = this.clock.updateTime(timePassed);
-            Debug.Log(numUpdates);
             for (int i = 0; i < numUpdates; i++) {
                 this.updateExtensions();
             }
         }
         return numUpdates;
-    }
-
-    public void update() {
-        this.updateExtensions();
     }
 
     private void updateExtensions() {

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TExtension : GraphComponent {
+public abstract class TExtension {
 
     protected List<ReceiveBridge> receiveBridges = new List<ReceiveBridge>();
     protected List<SendBridge> sendBridges = new List<SendBridge>();
 
     private string name;
 
-    public TExtension(string name, Vector2Int position) : base(position, new Vector2Int(5, 5), 0, false) {
+    public TExtension(string name) {
         this.name = name;
     }
 

@@ -10,5 +10,4 @@ public interface GraphInteger<T>
     bool canPlace(T component);
     T getComponentAt(int x, int y);
     List<T> getAllGraphComponents();
-
 }

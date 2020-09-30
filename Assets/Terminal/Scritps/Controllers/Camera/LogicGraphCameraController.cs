@@ -23,10 +23,10 @@ public class LogicGraphCameraController : MonoBehaviour {
     private int vertical = 0;
     private float cameraZoom = 0;
 
-    private WindowInput input;
+    private InputActions input;
     private RawImage rawImage;
 
-    public void setUp(Vector3 offset, LogicGraph graph, WindowInput input, RawImage image) {
+    public void setUp(Vector3 offset, LogicGraph graph, InputActions input, RawImage image) {
         //sets up the camera controller
 
         this.graph = graph;

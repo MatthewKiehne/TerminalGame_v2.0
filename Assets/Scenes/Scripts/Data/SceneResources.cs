@@ -7,10 +7,6 @@ public static class SceneResouces {
 
     public static Dictionary<Type, Dictionary<string, System.Object>> SceneObjects = new Dictionary<Type, Dictionary<string, System.Object>>();
 
-    public static void loadBundle(string pathToSceneFile) {
-        //loads in a assetbundl
-    }
-
     public static void loadResources(string path) {
         //load from resources
         

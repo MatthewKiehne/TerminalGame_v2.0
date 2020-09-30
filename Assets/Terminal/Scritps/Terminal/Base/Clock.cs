@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Clock {
 
-    private int updatesPerSecond;
+    private float maxTime;
     private float timePassed;
-    private bool pause = false;
 
-    public Clock(int updatesPerSecond, float timePassed, bool canStep, bool canSlowDown) {
-        this.updatesPerSecond = updatesPerSecond;
-        this.timePassed = timePassed;
+    public Clock(float maxTime) {
+        this.maxTime = maxTime;
+        this.timePassed = 0;
     }
 
     public int updateTime(float time) {
@@ -18,27 +17,14 @@ public class Clock {
 
         int updatesPassed = 0;
 
-        if (!this.pause) {
+        timePassed = time + timePassed;
 
-            timePassed = time + timePassed;
+        if (timePassed > this.maxTime) {
 
-            float period = 1f / updatesPerSecond;
-
-            if (timePassed > period) {
-
-                updatesPassed = (int)(timePassed / period);
-                timePassed = timePassed % period;
-            }
+            updatesPassed = (int)(timePassed / maxTime);
+            timePassed = timePassed % maxTime;
         }
 
         return updatesPassed;
-    }
-
-    public bool Pause {
-        get {
-            return this.pause;
-        } set {
-            this.pause = value;
-        }
     }
 }
