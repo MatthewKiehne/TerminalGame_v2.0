@@ -20,10 +20,10 @@ public class LogicGraphData
         //Debug.Log(graph.Name);
 
         this.Name = graph.Name;
-        this.Width = graph.Width;
-        this.Height = graph.Height;
+        this.Width = graph.lightGraph.Width;
+        this.Height = graph.lightGraph.Height;
 
-        List<LightComponent> comps = graph.getAllGraphComponents();
+        List<LightComponent> comps = graph.lightGraph.getAllGraphComponents();
         foreach(LightComponent comp in comps) {
 
             //Debug.Log(comp.GetType());

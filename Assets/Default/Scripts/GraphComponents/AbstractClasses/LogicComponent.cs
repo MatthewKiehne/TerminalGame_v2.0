@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class LogicComponent : InteractiveComponent {
 
-    
+    protected int state;
 
     //sets the state of the component based on the logic check and then clears the receivers
     public abstract void setState();
@@ -64,5 +64,9 @@ public abstract class LogicComponent : InteractiveComponent {
         for(int i = 0; i < this.receiverCount(); i++) {
             this.getReceiverAt(i).setActive(false);
         }
+    }
+
+    public int getState() {
+        return this.state;
     }
 }

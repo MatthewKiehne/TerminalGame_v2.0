@@ -99,7 +99,7 @@ public class LoadTerminalContent : WindowContent {
                             //Debug.Log(lgd.Name);
 
                             LogicGraph lg = new LogicGraph(lgd);
-                            terminal.addComponent(lg);
+                            terminal.addExtension(lg);
                         }
                     }
 

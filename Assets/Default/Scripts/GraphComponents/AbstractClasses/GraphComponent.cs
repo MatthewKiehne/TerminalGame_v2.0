@@ -18,8 +18,10 @@ public abstract class GraphComponent {
         this.flipped = flipped;
     }
 
+    ///<summary>
+    /// Returns the shape of the component after it has been rotated
+    /// </summary>
     public Rect getDimentions() {
-        //gets the basic dimentions of the shape
 
         Vector2Int rotatedSize = size;
         if ((this.rotaiton % 2) == 1) {

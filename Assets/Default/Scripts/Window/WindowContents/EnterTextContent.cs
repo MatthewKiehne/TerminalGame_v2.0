@@ -110,13 +110,13 @@ public class EnterTextContent : WindowContent {
             if (this.checkErrors()) {
                 
                 this.confirmAction(this.inputField.text);
-                WindowManager.Instance.removeWindow(windowController);
+                WindowManager.Instance.destroyWindow(windowController);
             }
         });
 
         bottomPanel.Find("CancelButton").GetComponent<Button>().onClick.AddListener(() => {
             //exits the window
-            WindowManager.Instance.removeWindow(windowController);
+            WindowManager.Instance.destroyWindow(windowController);
         });
     }
 

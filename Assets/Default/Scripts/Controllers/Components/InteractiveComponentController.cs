@@ -68,7 +68,17 @@ public abstract class InteractiveComponentController : GraphComponentController 
 
         InteractiveComponent comp = (InteractiveComponent)this.graphComponent;
 
-        int state = comp.getState();
+        int state = -1;
+
+        if (comp.GetType().IsSubclassOf(typeof(LinkComponent))) {
+            state = ((LinkComponent)comp).getExtensionConnection().State;
+        } else if(comp.GetType().IsSubclassOf(typeof(LogicComponent))) {
+            state = ((LogicComponent)comp).getState();
+        } else {
+            throw new Exception(comp.GetType() + " was not found");
+        }
+
+        
 
         for (int i = 0; i < this.senderControllers.Count; i++) {
 

@@ -20,19 +20,12 @@ public class WindowController : MonoBehaviour {
 		//closes the window when exiting 
 		transform.Find("Header").Find("Exit").GetComponent<Button> ().onClick.AddListener ( () => {
 
-            this.destroyWindow();
+			WindowManager.Instance.destroyWindow(this);
 		});	
 
 		//makes sure the contents is the correct size
 		this.onResizeWindow ();
 	}
-
-    public void destroyWindow() {
-        //destroys this window
-
-        this.data.Contents.onDestroy();
-        manager.removeWindow(this);
-    }
 
 	public void setUpWindow(Window window, WindowManager manager, Canvas canvas){
 

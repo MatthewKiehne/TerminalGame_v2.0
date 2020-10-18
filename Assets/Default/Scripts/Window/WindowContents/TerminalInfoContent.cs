@@ -159,11 +159,11 @@ public class TerminalInfoContent : WindowContent {
 
                     WindowController wc = WindowManager.Instance.getControllerByData(lgContent);
                     if(wc != null) {
-                        wc.destroyWindow();
+                        WindowManager.Instance.destroyWindow(wc);
                     }
                 }
 
-                this.terminalController.Terminal.removeComponent(this.terminalController.Terminal.extensionAt(index));
+                this.terminalController.Terminal.removeExtension(this.terminalController.Terminal.extensionAt(index));
                 this.refreshExtensionList();
             });
         }

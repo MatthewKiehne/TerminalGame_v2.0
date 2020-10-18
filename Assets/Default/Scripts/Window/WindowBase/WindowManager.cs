@@ -69,7 +69,7 @@ public class WindowManager : MonoBehaviour {
             //makes the keycode 'ESC' close the window and make the next window active
             window.Contents.Inputs.addInput(new KeyCombination(KeyCode.Escape, KeyStatus.Up), () => {
 
-                this.removeWindow(wc);
+                this.destroyWindow(wc);
             });
         }
 
@@ -152,12 +152,12 @@ public class WindowManager : MonoBehaviour {
 
     }
 
-	public void removeWindow(WindowController controller){
+    public void destroyWindow(WindowController controller){
+        //removes the window that the window controller is a attached to
 
-		//removes the window from the list
+        controller.Data.Contents.onDestroy();
+
 		windows.Remove (controller);
-
-		//destroys the window when clicked
 		GameObject.Destroy(controller.gameObject);
 
 		//makes the next window active
@@ -171,8 +171,8 @@ public class WindowManager : MonoBehaviour {
 
         int counter = 0;
 
-        while(this.windows.Count > 0 || counter > 100) {
-            this.windows[0].destroyWindow();
+        while(this.windows.Count > 0 && counter < 100) {
+            this.destroyWindow(this.windows[0]);
             counter++;
         }
     }

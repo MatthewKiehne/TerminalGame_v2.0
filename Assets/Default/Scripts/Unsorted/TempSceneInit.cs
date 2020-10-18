@@ -37,16 +37,16 @@ public class TempSceneInit : MonoBehaviour {
         Terminal firstTerminal = new Terminal("First Test Terminal", new Clock(1f));
 
         LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph");
-        firstTerminal.addComponent(emptyGraph);
+        firstTerminal.addExtension(emptyGraph);
 
 
         Terminal emptyTerminal = new Terminal("Blank Graphs", new Clock(2f));
         for(int i = 0; i < 10; i++) {
             LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1));
-            emptyTerminal.addComponent(tempEmptyGraph);
+            emptyTerminal.addExtension(tempEmptyGraph);
         }
 
-        emptyTerminal.addComponent(new TInput("H"));
+        //emptyTerminal.addExtension(new TInput("H"));
 
         List<Terminal> terms = new List<Terminal>();
         terms.Add(firstTerminal);

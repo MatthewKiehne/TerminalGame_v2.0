@@ -8,19 +8,19 @@ public class TInput : TExtension {
 
     public TInput(string name) : base(name) {
 
-        this.sendBridges.Add(new SendBridge(Vector2Int.zero, 0, false, "Keyboard Output"));
+        this.addSendBridge(new SendBridge("Keyboard Output"));
     }
 
     public override void clearReceivers() {
 
-        for (int i = 0; i < this.receiveBridges.Count; i++) {
-            this.receiveBridges[i].clearState();
+        for (int i = 0; i < this.ReceiveBridges.Length; i++) {
+            this.ReceiveBridges[i].clearState();
         }
     }
 
     public override void sendSignal() {
 
-        foreach(SendBridge send in this.sendBridges) {
+        foreach(SendBridge send in this.SendBridges) {
             send.sendData(this.state);
         }
         

@@ -1,13 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class TExtension {
 
-    protected List<ReceiveBridge> receiveBridges = new List<ReceiveBridge>();
-    protected List<SendBridge> sendBridges = new List<SendBridge>();
+    private List<ReceiveBridge> receiveBridges = new List<ReceiveBridge>();
+    private List<SendBridge> sendBridges = new List<SendBridge>();
 
     private string name;
+
+    public event Action OnReceiveBridgeAdd;
+    public event Action OnReceiveBridgeRemove;
+
+    public event Action OnSendBridgeAdd;
+    public event Action OnSendBridgeRemove;
+
 
     public TExtension(string name) {
         this.name = name;
@@ -22,25 +30,54 @@ public abstract class TExtension {
     //clears the receivers of all data they have received
     public abstract void clearReceivers();
 
-    public List<BridgeComponent> AllBridges() {
+    /// <summary>
+    /// Returns a list of all the ExtensionConnections
+    /// </summary>
+    public List<ExtensionConnection> AllBridges() {
 
-        List<BridgeComponent> result = new List<BridgeComponent>();
+        List<ExtensionConnection> result = new List<ExtensionConnection>();
 
         result.AddRange(this.sendBridges);
         result.AddRange(this.receiveBridges);
 
         return result;
-    }     
+    }
+    
+    public void addReceiveBridge(ReceiveBridge rec) {
+        this.receiveBridges.Add(rec);
+        this.OnReceiveBridgeAdd?.Invoke();
+    }
 
-    public List<ReceiveBridge> ReceiveBridges {
+    public bool removeReceiveBridge(ReceiveBridge rec) {
+        bool result = this.receiveBridges.Remove(rec);
+        if (result) {
+            this.OnReceiveBridgeRemove?.Invoke();
+        }
+        return result;
+    }
+
+    public void addSendBridge(SendBridge send) {
+        this.sendBridges.Add(send);
+        this.OnSendBridgeAdd?.Invoke();
+    }
+
+    public bool removeSendBridge(SendBridge send) {
+        bool result = this.sendBridges.Remove(send);
+        if (result) {
+            this.OnSendBridgeRemove?.Invoke();
+        }
+        return result;
+    }
+
+    public ReceiveBridge[] ReceiveBridges {
         get {
-            return this.receiveBridges;
+            return this.receiveBridges.ToArray();
         }
     }
 
-    public List<SendBridge> SendBridges {
+    public SendBridge[] SendBridges {
         get {
-            return this.sendBridges;
+            return this.sendBridges.ToArray();
         }
     }
 

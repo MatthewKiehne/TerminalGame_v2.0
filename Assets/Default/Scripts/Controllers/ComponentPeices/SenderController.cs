@@ -86,7 +86,7 @@ public class SenderController : MonoBehaviour {
         bool continueRayCasting = true;
 
         int bounceCounter = bounceNum;
-        int maxBounceCounter = LogicGraph.maxBounces;
+        int maxBounceCounter = LightGraph.maxBounces;
 
         List<List<Vector2>> allLines = new List<List<Vector2>>();
         List<Vector2> currentLines = new List<Vector2>();
@@ -169,6 +169,6 @@ public class SenderController : MonoBehaviour {
         //returns a hitData if the ray hits something it can connect to
         //checks if it hits a collider within 500 units
 
-        return Physics2D.Raycast(startingPoint, direction, LogicGraph.MaxRayDistance);
+        return Physics2D.Raycast(startingPoint, direction, int.MaxValue);
     }
 }

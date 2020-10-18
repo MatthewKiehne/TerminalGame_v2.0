@@ -4,35 +4,33 @@ using UnityEngine;
 
 public class Sender : ComponentPiece {
 
-    private List<Receiver> targets;
+    private List<Receiver> receivers;
 
     public Sender(Rect rect) : base(rect) {
-        this.targets = new List<Receiver>();
+        this.receivers = new List<Receiver>();
     }
 
     public void setTargetsActive() {
 
-        //Debug.Log("Number of targets: " + this.targets.Count);
-
-        for(int i = 0; i < targets.Count; i++) {
-            targets[i].setActive(true);
+        for(int i = 0; i < receivers.Count; i++) {
+            receivers[i].setActive(true);
         }
     }
 
     public int getTargetCount() {
-        return this.targets.Count;
+        return this.receivers.Count;
     }
 
     public void clearTargets() {
         //clears the targets
-        this.targets.Clear();
+        this.receivers.Clear();
     }
 
     public void addTarget(Receiver receiver) {
-        this.targets.Add(receiver);
+        this.receivers.Add(receiver);
     }
 
     public void setTargets(List<Receiver> receivers) {
-        this.targets = receivers;
+        this.receivers = receivers;
     }
 }

@@ -16,7 +16,7 @@ public class LogicGraphController : MonoBehaviour {
         this.logicGraph = logicGraph;
         this.bottomLeftWorld = bottomLeftWorld;
         this.transform.position = bottomLeftWorld;
-        this.changeSize(logicGraph.Width, logicGraph.Height);
+        this.changeSize(logicGraph.lightGraph.Width, logicGraph.lightGraph.Height);
         this.makeComponentManager(logicGraph, bottomLeftWorld);
         this.logicGraphManager = logicGraphManager;
     }

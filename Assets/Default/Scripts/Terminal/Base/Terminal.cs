@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,21 @@ public class Terminal {
     private Clock clock;
 
     private List<TExtension> extensions = new List<TExtension>();
+
+    /// <summary>
+    /// Gets called after an Extension has been added to the Terminal
+    /// </summary>
+    public event Action OnExtensionAdd;
+
+    /// <summary>
+    /// Gets called after an Extension has been removed to the Terminal
+    /// </summary>
+    public event Action OnExtensionRemove;
+
+    /// <summary>
+    /// Called after the Terminal has finished an updating all the Extensions
+    /// </summary>
+    public event Action OnTerminalUpdate;
 
     public Terminal(string name) {
         this.name = name;
@@ -26,8 +42,10 @@ public class Terminal {
         this.name = data.Name;
     }
 
+    /// <summary>
+    /// Updates the extensions based on the number of periods the clock has passed 
+    /// </summary>
     public int updateTime(float timePassed) {
-        //updates the extensions based on the number of periods the clock has passed 
 
         int numUpdates = 0;
 
@@ -41,56 +59,66 @@ public class Terminal {
         return numUpdates;
     }
 
+    /// <summary>
+    /// Updates all the Extensions in the Terminal
+    /// </summary>
     private void updateExtensions() {
-        //updates the terminal and all of the TExtensions in it
-
-        //Debug.Log("Terminal Update Extensions " + this.Name);
 
         //sets the state of each extension then clears the extensions
         for (int i = 0; i < this.extensions.Count; i++) {
             this.extensions[i].setState();
             this.extensions[i].clearReceivers();
-
-            //Debug.Log("extension Update: " + this.extensions[i].Name);
         }
 
         //sends the signal to the extensions
         for (int i = 0; i < this.extensions.Count; i++) {
             this.extensions[i].sendSignal();
         }
+
+        this.OnTerminalUpdate?.Invoke();
     }
 
-    #region GraphInteger
-    public bool addComponent(TExtension component) {
-        this.extensions.Add(component);
-        return true;
-    }
-
-    public bool removeComponent(TExtension component) {
+    /// <summary>
+    /// Removes an Extension from the Terminal
+    /// </summary>
+    public bool removeExtension(TExtension extension) {
 
         bool result = true;
 
         //disconnect 
-        foreach(SendBridge send in component.SendBridges) {
+        foreach(SendBridge send in extension.SendBridges) {
             send.clearConnections();
         }
-        foreach(ReceiveBridge rec in component.ReceiveBridges) {
+        foreach(ReceiveBridge rec in extension.ReceiveBridges) {
             rec.clearConnections();
         }
 
-        result = this.extensions.Remove(component);
+        result = this.extensions.Remove(extension);
+
+        this.OnExtensionRemove?.Invoke();
 
         return result;
     }
 
-    public TExtension getComponentAt(int x, int y) {
-        throw new System.NotImplementedException();
+    /// <summary>
+    /// Adds the extension to the Terminal
+    /// </summary>
+    public void addExtension(TExtension extension) {
+        this.extensions.Add(extension);
+        this.OnExtensionAdd?.Invoke();
     }
 
-    public List<TExtension> getAllGraphComponents() {
-        throw new System.NotImplementedException();
+    public TExtension extensionAt(int index) {
+        return this.extensions[index];
     }
-    #endregion
+
+    public int extensionLength() {
+        return this.extensions.Count;
+    }
+
+    public int extensionIndexOf(TExtension extension) {
+        return this.extensions.IndexOf(extension);
+    }
 
     public Clock Clock {
         get {
@@ -104,35 +132,5 @@ public class Terminal {
         get {
             return this.name;
         }
-    }
-
-    public void addExtension(TExtension extension) {
-        this.extensions.Add(extension);
-    }
-
-    public bool removeExtension(TExtension extension) {
-        //removes the connections and then removes the component
-        bool result = this.extensions.Remove(extension);
-        if (result) {
-            foreach (SendBridge send in extension.SendBridges) {
-                send.clearConnections();
-            }
-            foreach (ReceiveBridge rec in extension.ReceiveBridges) {
-                rec.clearConnections();
-            }
-        }
-        return result;
-    }
-
-    public TExtension extensionAt(int index) {
-        return this.extensions[index];
-    }
-
-    public int extensionLength() {
-        return this.extensions.Count;
-    }
-
-    public int extensionIndexOf(TExtension extension) {
-        return this.extensions.IndexOf(extension);
     }
 }

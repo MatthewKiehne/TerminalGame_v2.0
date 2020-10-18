@@ -6,7 +6,6 @@ public abstract class InteractiveComponent : LightComponent {
 
     protected List<Sender> senders = new List<Sender>();
     protected List<Receiver> receivers = new List<Receiver>();
-    protected int state;
 
     public InteractiveComponent(Vector2Int position, Vector2Int size, int rotation, bool flipped, int numSenders, int numRecievers) : 
         base(position, size, rotation, flipped) {
@@ -127,13 +126,11 @@ public abstract class InteractiveComponent : LightComponent {
 
             Receiver receiver = null;
 
-            if (this.GetType().IsSubclassOf(typeof(BridgeComponent))) {
+            if (this.GetType().IsSubclassOf(typeof(LinkComponent))) {
 
                 int state = 1;
-                //Debug.Log("shift:" + (numRecievers - 1 - i));
                 state = state << (numRecievers - 1 - i);
-                //Debug.Log("interactive -> state: " + state);
-                receiver = new BReceiver(recieverRect,(SendBridge)this,state);
+                receiver = new BReceiver(recieverRect,(GraphOutput)this,state);
 
             } else if(this.GetType().IsSubclassOf(typeof(LogicComponent))) {
                 receiver = new LReceiver(recieverRect);
@@ -157,6 +154,9 @@ public abstract class InteractiveComponent : LightComponent {
         }
     }
 
+    /// <summary>
+    /// Sets all the receivers to false
+    /// </summary>
     public void clearRecievers() {
         //clears all the receivers
 
@@ -179,9 +179,5 @@ public abstract class InteractiveComponent : LightComponent {
 
     public int receiverCount() {
         return this.receivers.Count;
-    }
-
-    public int getState() {
-        return this.state;
     }
 }

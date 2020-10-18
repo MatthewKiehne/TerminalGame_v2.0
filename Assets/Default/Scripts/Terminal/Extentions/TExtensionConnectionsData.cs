@@ -4,7 +4,8 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class TExtensionConnectionsData {
+public class TExtensionConnectionsData
+{
 
     public List<BridgeComponentConnectionData> connections = new List<BridgeComponentConnectionData>();
 
@@ -25,9 +26,9 @@ public class TExtensionConnectionsData {
 
             TExtension ext = terminal.extensionAt(i);
 
-            foreach(SendBridge send in ext.SendBridges) {
+            foreach (SendBridge send in ext.SendBridges) {
 
-                for(int r = 0; r < send.ReceiveBridges.Count; r++) {
+                for (int r = 0; r < send.ReceiveBridges.Count; r++) {
 
                     ReceiveBridge toBridge = send.ReceiveBridges[r];
                     TExtension toExtension = recDic[toBridge];
@@ -42,16 +43,19 @@ public class TExtensionConnectionsData {
         }
     }
 
+    /// <summary>
+    /// Links two bridges together in the Terminal passed in
+    /// </summary>
     public void buildConnections(Terminal terminal) {
 
-        foreach(BridgeComponentConnectionData connection in this.connections) {
+        foreach (BridgeComponentConnectionData connection in this.connections) {
 
             TExtension fromExtension = terminal.findExtension(connection.fromExtension);
-            SendBridge fromBridge = fromExtension.SendBridges.Find(x => x.Name.Equals(connection.fromBridge));
+            SendBridge fromBridge = Array.Find(fromExtension.SendBridges, (x) => x.Name.Equals(connection.fromBridge));
             TExtension toExtension = terminal.findExtension(connection.toExtension);
-            ReceiveBridge toBridge = toExtension.ReceiveBridges.Find(x => x.Name.Equals(connection.toBridge));
+            ReceiveBridge toBridge = Array.Find(toExtension.ReceiveBridges, (x) => x.Name.Equals(connection.toBridge));
 
-            if(fromExtension != null && fromBridge != null && toExtension != null && toBridge != null) {
+            if (fromExtension != null && fromBridge != null && toExtension != null && toBridge != null) {
                 fromBridge.ReceiveBridges.Add(toBridge);
                 toBridge.SendBridges.Add(fromBridge);
             }

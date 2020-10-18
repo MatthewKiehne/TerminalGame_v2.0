@@ -38,7 +38,7 @@ public class ExtensionConnectionController : MonoBehaviour {
     }
 
     public void setUp(Terminal terminal, TerminalConnectionsContent terminalConnectionContent,
-        TExtension fromExtension, SendBridge send, TExtension toExtension, ReceiveBridge receive) {
+        TExtension fromExtension, SendBridge sendBridge, TExtension toExtension, ReceiveBridge receiveBridge) {
 
         this.terminal = terminal;
         this.terminalConnectionsContent = terminalConnectionContent;
@@ -46,14 +46,14 @@ public class ExtensionConnectionController : MonoBehaviour {
         this.findComponents();
 
         int fromExtensionIndex = this.terminal.extensionIndexOf(fromExtension);
-        int sendIndex = fromExtension.SendBridges.IndexOf(send);
+        int sendIndex = Array.IndexOf(fromExtension.SendBridges, sendBridge);
         int toExtensionIndex = this.terminal.extensionIndexOf(toExtension);
-        int receiveIndex = toExtension.ReceiveBridges.IndexOf(receive);
+        int receiveIndex = Array.IndexOf(toExtension.ReceiveBridges, receiveBridge);
 
         this.fromExtensionSelect = fromExtension;
-        this.fromBridgeSelect = send;
+        this.fromBridgeSelect = sendBridge;
         this.toExtensionSelect = toExtension;
-        this.toBridgeSelect = receive;
+        this.toBridgeSelect = receiveBridge;
 
         this.fromExtensionOptions.AddOptions(this.extensionList());
         this.fromExtensionOptions.value = fromExtensionIndex + 1;
@@ -256,7 +256,7 @@ public class ExtensionConnectionController : MonoBehaviour {
         //verifies if the from bridge is correct
         bool result = false;
 
-        if (fromBridgeOptions.value - 1 < this.fromExtensionSelect.SendBridges.Count) {
+        if (fromBridgeOptions.value - 1 < this.fromExtensionSelect.SendBridges.Length) {
 
             SendBridge sendBridge = this.fromExtensionSelect.SendBridges[fromBridgeOptions.value - 1];
 
@@ -290,7 +290,7 @@ public class ExtensionConnectionController : MonoBehaviour {
         //verifies if the from bridge is correct
         bool result = false;
 
-        if (toBridgeOptions.value - 1 < this.toExtensionSelect.ReceiveBridges.Count) {
+        if (toBridgeOptions.value - 1 < this.toExtensionSelect.ReceiveBridges.Length) {
 
             ReceiveBridge receiveBridge = this.toExtensionSelect.ReceiveBridges[toBridgeOptions.value - 1];
 
@@ -318,14 +318,13 @@ public class ExtensionConnectionController : MonoBehaviour {
         return found;
     }
 
-    private bool bridgeInExtension(BridgeComponent bridge, TExtension ext) {
+    private bool bridgeInExtension(ExtensionConnection bridge, TExtension ext) {
         bool found = false;
 
         if(bridge.GetType() == typeof(SendBridge)) {
-
-            found = ext.SendBridges.Contains((SendBridge)bridge);
+            found = Array.Exists(ext.SendBridges, b => b.Equals(bridge));
         } else {
-            found = ext.ReceiveBridges.Contains((ReceiveBridge)bridge);
+            found = Array.Exists(ext.ReceiveBridges, b => b.Equals(bridge));
         }
 
         return found;
@@ -419,11 +418,11 @@ public class ExtensionConnectionController : MonoBehaviour {
         return result;
     }
 
-    private SendBridge findSendBridgeByName(List<SendBridge> list, string name) {
+    private SendBridge findSendBridgeByName(SendBridge[] list, string name) {
 
         SendBridge result = null;
         int counter = 0;
-        while (counter < list.Count && result == null) {
+        while (counter < list.Length && result == null) {
             if (list[counter].Name.Equals(name)) {
                 result = list[counter];
             }
@@ -432,11 +431,11 @@ public class ExtensionConnectionController : MonoBehaviour {
         return result;
     }
 
-    private ReceiveBridge findReceiveBridgeByName(List<ReceiveBridge> list, string name) {
+    private ReceiveBridge findReceiveBridgeByName(ReceiveBridge[] list, string name) {
 
         ReceiveBridge result = null;
         int counter = 0;
-        while (counter < list.Count && result == null) {
+        while (counter < list.Length && result == null) {
             if (list[counter].Name.Equals(name)) {
                 result = list[counter];
             }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BReceiver : Receiver {
 
-    private SendBridge sendBridge;
+    private GraphOutput graphOutput;
     private int stateNumber;
 
-    public BReceiver(Rect rect, SendBridge sendBridge, int stateNumber) : base(rect) {
+    public BReceiver(Rect rect, GraphOutput output, int stateNumber) : base(rect) {
         this.stateNumber = stateNumber;
-        this.sendBridge = sendBridge;
+        this.graphOutput = output;
     }
 
     public override bool getActive() {
@@ -20,7 +20,7 @@ public class BReceiver : Receiver {
         //sends this receiver's value to the receiver as soon as it is activated
 
         if (active) {
-            this.sendBridge.sendData(this.stateNumber);
+            this.graphOutput.sendData(this.stateNumber);
         }
     }
 }

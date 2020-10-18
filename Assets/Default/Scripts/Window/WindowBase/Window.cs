@@ -14,8 +14,6 @@ public class Window {
 		this.minHeight = minHeight;
 		this.name = name;
 		this.contents = contents;
-
-        
 	}
 
 	public string Name {

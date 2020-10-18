@@ -92,7 +92,7 @@ public class TerminalConnectionsContent : WindowContent {
         }
     }
 
-    private TExtension findReceiveBridge(ReceiveBridge recBridge) {
+    private TExtension findReceiveBridge(ReceiveBridge input) {
         //finds the extension that the receiveBridge belongs to
 
         TExtension result = null;
@@ -101,9 +101,9 @@ public class TerminalConnectionsContent : WindowContent {
         while (extensionCounter < this.terminal.extensionLength() && result == null) {
 
             int receiveCoutner = 0;
-            while (receiveCoutner < this.terminal.extensionAt(extensionCounter).ReceiveBridges.Count && result == null) {
+            while (receiveCoutner < this.terminal.extensionAt(extensionCounter).ReceiveBridges.Length && result == null) {
 
-                if (recBridge.Equals(this.terminal.extensionAt(extensionCounter).ReceiveBridges[receiveCoutner])) {
+                if (input.Equals(this.terminal.extensionAt(extensionCounter).ReceiveBridges[receiveCoutner])) {
                     result = this.terminal.extensionAt(extensionCounter);
                 }
 

@@ -23,7 +23,7 @@ public abstract class BridgeComponent : InteractiveComponent {
 
         List<Tuple> result = new List<Tuple>();
 
-        result.Add(new Tuple("state",this.state + ""));
+        //result.Add(new Tuple("state",this.state + ""));
         result.Add(new Tuple("name", this.name));  
 
         return result;

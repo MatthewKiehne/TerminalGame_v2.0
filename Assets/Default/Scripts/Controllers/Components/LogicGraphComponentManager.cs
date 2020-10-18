@@ -17,7 +17,7 @@ public class LogicGraphComponentManager : MonoBehaviour {
         //loads all of the components on to the graph
         this.bottomLeftofGraph = bottomLeft;
 
-        List<LightComponent> graphComponents = logicGraph.getAllGraphComponents();
+        List<LightComponent> graphComponents = logicGraph.lightGraph.getAllGraphComponents();
 
         //makes all the components
         foreach (GraphComponent gc in graphComponents) {
@@ -92,7 +92,7 @@ public class LogicGraphComponentManager : MonoBehaviour {
             prefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["PassingMirror"];
             resultType = typeof(PassiveComponentController);
 
-        } else if (comp.GetType().BaseType == typeof(BridgeComponent)) {
+        } else if (comp.GetType().BaseType == typeof(LinkComponent)) {
 
             prefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicLogicComponent"];
             resultType = typeof(BridgeComponentController);
