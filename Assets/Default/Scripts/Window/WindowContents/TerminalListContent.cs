@@ -15,13 +15,13 @@ public class TerminalListContent : WindowContent {
 
 
         //loads and instantiates the gui
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EmptyList"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalList"];
         GameObject gui = GameObject.Instantiate(guiPrefab);
         gui.transform.SetParent(contentPanel, false);
 
         //makes a button for each clock
         GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicButton"];
-        Transform display = gui.transform.Find("Mask").Find("Display");
+        Transform display = gui.transform.Find("EmptyList").Find("Mask").Find("Display");
         WindowManager windowManager = GameObject.Find("WindowManager").GetComponent<WindowManager>();
 
         //loops through all the terminals
@@ -56,7 +56,11 @@ public class TerminalListContent : WindowContent {
         //does nothing
     }
 
-    public override void onDestroy() {
+    public override void receiveBroadcast(string message) {
+        //does nothing
+    }
+
+    protected override void destroyContent() {
         //does nothing
     }
 

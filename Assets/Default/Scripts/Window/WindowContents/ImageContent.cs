@@ -16,7 +16,7 @@ public class ImageContent : WindowContent {
         //deos nothing
     }
 
-    public override void onDestroy() {
+    public override void receiveBroadcast(string message) {
         //does nothing
     }
 
@@ -29,5 +29,9 @@ public class ImageContent : WindowContent {
         GameObject imagePrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Image"];
         GameObject imageGO = GameObject.Instantiate(imagePrefab, contentPanel.transform, false);
         imageGO.GetComponent<Image>().sprite = this.sprite;
+    }
+
+    protected override void destroyContent() {
+        //does nothing
     }
 }

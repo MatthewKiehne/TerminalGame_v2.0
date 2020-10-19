@@ -22,6 +22,7 @@ Default/Prefabs/Window/Window
 ~ all the contents for the windows being displayed
 Default/Prefabs/WindowGUI/EmptyList
 Default/Prefabs/WindowGUI/TerminalInfo
+Default/Prefabs/WindowGUI/TerminalList
 Default/Prefabs/WindowGUI/GraphEditor
 Default/Prefabs/WindowGUI/TerminalConnections
 Default/Prefabs/WindowGUI/Connection
@@ -31,6 +32,7 @@ Default/Prefabs/BasicGUI/BasicButton
 Default/Prefabs/BasicGUI/Panel
 Default/Prefabs/BasicGUI/Image
 Default/Prefabs/BasicGUI/Dropdown
+Default/Prefabs/BasicGUI/ItemButton
 
 ~ all the basic shapes needed to make complex 
 Default/Sprites/BasicShapes/Square

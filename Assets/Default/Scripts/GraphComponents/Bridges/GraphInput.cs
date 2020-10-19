@@ -27,8 +27,6 @@ public class GraphInput : LinkComponent
     /// </summary>
     public void onStateChange(int newState) {
 
-        Debug.Log("Graph Input: " + newState);
-
         if (newState != 0) {
             for (int i = 0; i < this.senders.Count; i++) {
 

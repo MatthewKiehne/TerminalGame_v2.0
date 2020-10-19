@@ -19,10 +19,6 @@ public class TerminalConnectionsContent : WindowContent {
         //does nothing
     }
 
-    public override void onDestroy() {
-        //does nothing
-    }
-
     public override bool sameContent(WindowContent content) {
         return content.GetType() == this.GetType() && ((TerminalConnectionsContent)content).terminal.Equals(this.terminal);
     }
@@ -114,6 +110,14 @@ public class TerminalConnectionsContent : WindowContent {
         }
 
         return result;
+    }
+
+    public override void receiveBroadcast(string message) {
+        //does nothing
+    }
+
+    protected override void destroyContent() {
+        //does nothing
     }
 
     public Terminal Terminal {

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TerminalInfoContent : WindowContent {
+public class TerminalInfoContent : WindowContent
+{
 
     private TerminalController terminalController;
 
@@ -15,13 +16,12 @@ public class TerminalInfoContent : WindowContent {
     }
 
     public override void changeWindowSize(int width, int height) {
-    }
-
-    public override void onDestroy() {
+        //does nothing
     }
 
     public override bool sameContent(WindowContent content) {
-        return this.GetType() == content.GetType() && ((TerminalInfoContent)content).getTerminal().Equals(this.terminalController);
+        return this.GetType() == content.GetType() &&
+            ((TerminalInfoContent)content).getTerminal().Equals(this.terminalController);
     }
 
     public override void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas) {
@@ -34,9 +34,10 @@ public class TerminalInfoContent : WindowContent {
 
         //opens the terminal connections window
         Button linkButton = gui.transform.Find("Info").Find("BasicButton").GetComponent<Button>();
-        linkButton.onClick.AddListener(() => {
+        linkButton.onClick.AddListener(() =>
+        {
             windowManager.spawnWindow(new Window(
-                 this.terminalController.Terminal.Name + "'s Connections", 
+                 this.terminalController.Terminal.Name + "'s Connections",
                 300, 300, new TerminalConnectionsContent(this.terminalController.Terminal)));
         });
 
@@ -45,7 +46,8 @@ public class TerminalInfoContent : WindowContent {
         this.listDisplay = leftPanel.Find("ExtensionList").Find("Mask").Find("Display");
 
         Button addButton = leftPanel.Find("HeaderPanel").Find("AddButton").GetComponent<Button>();
-        addButton.onClick.AddListener(() => {
+        addButton.onClick.AddListener(() =>
+        {
             this.onAddGraphClick();
         });
 
@@ -63,12 +65,13 @@ public class TerminalInfoContent : WindowContent {
 
         }, () => { }, 50);
 
-        content.addErrorCheck((string value) => {
+        content.addErrorCheck((string value) =>
+        {
 
             bool result = true;
             int counter = 0;
 
-            while(result && counter < this.terminalController.Terminal.extensionLength()) {
+            while (result && counter < this.terminalController.Terminal.extensionLength()) {
 
                 if (this.terminalController.Terminal.extensionAt(counter).Name.Equals(value)) {
                     result = false;
@@ -82,44 +85,29 @@ public class TerminalInfoContent : WindowContent {
         }, "That name already exists in this terminal");
 
         Window window = new Window("Add new Graph to " + this.terminalController.Terminal.Name, 200, 200, content);
-        WindowManager.Instance.spawnWindow(window);
+        this.spawnChildWindow(window);
 
     }
 
     private void populateExtensions() {
         //populates the list with all the extensions
 
-        GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicButton"];
-        GameObject PanelPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Panel"];
+        GameObject itemPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["ItemButton"];
 
         for (int i = 0; i < this.terminalController.Terminal.extensionLength(); i++) {
 
             int index = i;
 
-            GameObject panel = GameObject.Instantiate(PanelPrefab);
-            panel.transform.SetParent(this.listDisplay, false);
+            GameObject item = GameObject.Instantiate(itemPrefab);
+            item.transform.SetParent(this.listDisplay, false);
 
-            LayoutElement panelElement = panel.AddComponent<LayoutElement>();
-            panelElement.flexibleWidth = 1;
+            Transform graphButton = item.transform.Find("SelectButton");
+            Transform deleteButton = item.transform.Find("DeleteButton");
 
-            HorizontalLayoutGroup panelLayout = panel.AddComponent<HorizontalLayoutGroup>();
-            panelLayout.childControlHeight = true;
-            panelLayout.childControlWidth = true;
-            panelLayout.childForceExpandHeight = false;
-            panelLayout.childForceExpandWidth = false;
+            graphButton.Find("Text").GetComponent<Text>().text = this.terminalController.Terminal.extensionAt(index).Name;
 
-            GameObject View = GameObject.Instantiate(buttonPrefab);
-            View.transform.SetParent(panel.transform, false);
-            Button logicGraphButton = View.GetComponent<Button>();
-
-            LayoutElement le = View.AddComponent<LayoutElement>();
-            le.minHeight = 40;
-            le.flexibleWidth = 1;
-
-            Text text = logicGraphButton.transform.Find("Text").GetComponent<Text>();
-            text.text = this.terminalController.Terminal.extensionAt(index).Name;
-
-            logicGraphButton.onClick.AddListener(() => {
+            graphButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
 
                 if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicGraph)) {
 
@@ -131,25 +119,8 @@ public class TerminalInfoContent : WindowContent {
                 }
             });
 
-            GameObject delete = GameObject.Instantiate(buttonPrefab);
-            delete.transform.SetParent(panel.transform, false);
-
-            Button deleteButton = delete.GetComponent<Button>();
-
-            ColorBlock deleteColors = deleteButton.colors;
-            deleteColors.normalColor = Color.red;
-            deleteColors.highlightedColor = Color.red;
-            deleteButton.colors = deleteColors;
-
-            Text deleteText = delete.transform.GetChild(0).GetComponent<Text>();
-            deleteText.text = "X";
-
-            LayoutElement deleteElement = delete.AddComponent<LayoutElement>();
-            deleteElement.minHeight = 40;
-            deleteElement.flexibleWidth = 0;
-            deleteElement.minWidth = 20;
-
-            deleteButton.onClick.AddListener(() => {
+            deleteButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
 
                 //removes the logic graph window
                 if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicGraph)) {
@@ -158,7 +129,7 @@ public class TerminalInfoContent : WindowContent {
                     LogicGraphContent lgContent = new LogicGraphContent(graph, terminalController.GraphManager);
 
                     WindowController wc = WindowManager.Instance.getControllerByData(lgContent);
-                    if(wc != null) {
+                    if (wc != null) {
                         WindowManager.Instance.destroyWindow(wc);
                     }
                 }
@@ -167,13 +138,25 @@ public class TerminalInfoContent : WindowContent {
                 this.refreshExtensionList();
             });
         }
+    }
 
+    public override void receiveBroadcast(string message) {
+        //does nothing
+    }
+
+    protected override void destroyContent() {
+
+        //removes the functions from the buttons
+        foreach (Transform child in this.listDisplay) {
+            child.Find("SelectButton").GetComponent<Button>().onClick.RemoveAllListeners();
+            child.Find("DeleteButton").GetComponent<Button>().onClick.RemoveAllListeners();
+        }
     }
 
     private void deleteExtensions() {
         //clears the extension list
 
-        foreach(Transform child in this.listDisplay.transform) {
+        foreach (Transform child in this.listDisplay.transform) {
             GameObject.Destroy(child.gameObject);
         }
     }

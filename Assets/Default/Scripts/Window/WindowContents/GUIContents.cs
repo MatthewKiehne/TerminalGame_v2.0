@@ -22,15 +22,18 @@ public class GUIContents : WindowContent {
         //does nothing
     }
 
-    public override void onDestroy() {
-
-    }
-
     public override bool sameContent(WindowContent content) {
         return content.GetType() == this.GetType() && ((GUIContents)content).getGUI().Equals(this.gui);
     }
 
     public GameObject getGUI() {
         return this.gui;
+    }
+
+    public override void receiveBroadcast(string message) {
+        //does nothing
+    }
+    protected override void destroyContent() {
+        //does nothing
     }
 }

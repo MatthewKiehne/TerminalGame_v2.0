@@ -29,6 +29,13 @@ public class InputCoordinator : MonoBehaviour
         data.RaycastResults = raycastResults;
         data.MousePosition = Input.mousePosition;
 
+        if (Input.GetKeyDown(KeyCode.Mouse0)) {
+            WindowController hitWindow = WindowManager.Instance.mouseOverWindow(data);
+            if(hitWindow != null) {
+                WindowManager.Instance.makeActive(hitWindow);
+            }
+        }
+
         WindowManager.Instance.giveActiveWindowInputs(data);
     }
 }

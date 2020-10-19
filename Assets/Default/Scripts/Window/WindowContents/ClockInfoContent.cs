@@ -63,11 +63,15 @@ public class ClockInfoContent : WindowContent {
 		//does nothing
 	}
 
-	public override void onDestroy () {
-
+	public override void receiveBroadcast(string message) {
+		//does nothing
 	}
 
-    public override bool sameContent(WindowContent content) {
+	protected override void destroyContent() {
+		//does nothing
+	}
+
+	public override bool sameContent(WindowContent content) {
         return false;
     }
 }

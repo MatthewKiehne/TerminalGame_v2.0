@@ -125,7 +125,10 @@ public class WindowManager : MonoBehaviour {
 		return result;
 	}
 
-    public bool mouseOverWindow(InputData data) {
+    /// <summary>
+    /// Returns the first WindowController that it is over
+    /// </summary>
+    public WindowController mouseOverWindow(InputData data) {
         //checks to see if the click was over a window
 
         //tries to find the first Window Controller
@@ -143,13 +146,17 @@ public class WindowManager : MonoBehaviour {
             hitIndex++;
         }
 
-        if (firstWindow != null) {
-            //makes the first window active
-            this.makeActive(firstWindow);
+        return firstWindow;
+    }
+
+    /// <summary>
+    /// Broadcasts a message to all of the windows
+    /// </summary>
+    public void broadcast(string message) {
+
+        foreach(WindowController con in this.windows) {
+            con.Data.Contents.receiveBroadcast(message);
         }
-
-        return firstWindow != null;
-
     }
 
     public void destroyWindow(WindowController controller){

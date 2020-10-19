@@ -45,10 +45,14 @@ public class LogicGraphContent : WindowContent {
 
         //create the new
         this.renderTexture = new RenderTexture(width, height, 16);
+        this.renderTexture.antiAliasing = 1;
         this.camera.targetTexture = this.renderTexture;
         this.rawImage.texture = this.renderTexture;
         this.renderTexture.Create();
+    }
 
+    public override void receiveBroadcast(string message) {
+        //should do something
     }
 
     private void destroyRenderTexture() {
@@ -60,7 +64,10 @@ public class LogicGraphContent : WindowContent {
         GameObject.Destroy(this.renderTexture);
     }
 
-    public override void onDestroy() {
+    /// <summary>
+    /// Destroys the propper things
+    /// </summary>
+    protected override void destroyContent() {
         //when the window is closed
 
         //destroy mouse Object
@@ -299,7 +306,7 @@ public class LogicGraphContent : WindowContent {
                             return this.logicGraphController.Graph.lightGraph.canPlace(comp);
                         }, "Can not Place there");
 
-                        WindowManager.Instance.spawnWindow(new Window(comp.GetType() + " Name", 200, 200, etc));
+                        this.spawnChildWindow(new Window(comp.GetType() + " Name", 200, 200, etc));
 
                     } else {
 

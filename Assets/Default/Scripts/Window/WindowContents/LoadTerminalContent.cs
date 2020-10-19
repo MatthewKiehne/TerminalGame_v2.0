@@ -21,9 +21,13 @@ public class LoadTerminalContent : WindowContent {
         //does nothing
     }
 
-    public override void onDestroy() {
+    protected override void destroyContent() {
         this.windowManager.AllowSpawnWindows = true;
         this.windowManager.setActivityofCurrentWindows(true);
+    }
+
+    public override void receiveBroadcast(string message) {
+        //does nothing
     }
 
     public override bool sameContent(WindowContent content) {

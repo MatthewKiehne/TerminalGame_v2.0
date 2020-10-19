@@ -124,11 +124,15 @@ public class EnterTextContent : WindowContent {
         
     }
 
-    public override void onDestroy() {
-        
-    }
-
     public override bool sameContent(WindowContent content) {
         return content.GetType() == this.GetType() && ((EnterTextContent)content).instructions.Equals(this.instructions);
+    }
+
+    public override void receiveBroadcast(string message) {
+        //does nothing
+    }
+
+    protected override void destroyContent() {
+        //does nothing
     }
 }
