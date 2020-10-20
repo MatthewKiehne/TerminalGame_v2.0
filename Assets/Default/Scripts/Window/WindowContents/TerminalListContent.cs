@@ -25,7 +25,7 @@ public class TerminalListContent : WindowContent {
         WindowManager windowManager = GameObject.Find("WindowManager").GetComponent<WindowManager>();
 
         //loops through all the terminals
-        for (int i = 0; i < this.terminalManager.TerminalControllers.Count; i++) {
+        for (int i = 0; i < this.terminalManager.TerminalControllers.Length; i++) {
 
             int index = i;
 

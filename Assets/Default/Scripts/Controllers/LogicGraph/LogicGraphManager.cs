@@ -15,7 +15,7 @@ public class LogicGraphManager : MonoBehaviour {
         GameObject graphPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Graph"];
         GameObject go = Instantiate(graphPrefab).gameObject;
 
-        Vector3 offset = new Vector3(graph.lightGraph.Width / 2, graph.lightGraph.Height / 2, 0);
+        Vector3 offset = new Vector3(graph.LightGraph.Width / 2, graph.LightGraph.Height / 2, 0);
         go.transform.position = bottomLeft + offset;
 
         LogicGraphController lgc = go.GetComponent<LogicGraphController>();

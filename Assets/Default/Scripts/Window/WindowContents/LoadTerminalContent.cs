@@ -7,11 +7,9 @@ using UnityEngine.UI;
 
 public class LoadTerminalContent : WindowContent {
 
-    private WindowManager windowManager;
     private TerminalManager terminalManager;
 
-    public LoadTerminalContent(WindowManager windowManager, TerminalManager terminalManager) {
-        this.windowManager = windowManager;
+    public LoadTerminalContent( TerminalManager terminalManager) {
         this.terminalManager = terminalManager;
         this.movable = false;
         this.fixxedSize = true;
@@ -22,8 +20,8 @@ public class LoadTerminalContent : WindowContent {
     }
 
     protected override void destroyContent() {
-        this.windowManager.AllowSpawnWindows = true;
-        this.windowManager.setActivityofCurrentWindows(true);
+        WindowManager.Instance.AllowSpawnWindows = true;
+        WindowManager.Instance.setActivityofCurrentWindows(true);
     }
 
     public override void receiveBroadcast(string message) {
@@ -36,7 +34,7 @@ public class LoadTerminalContent : WindowContent {
 
     public override void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas) {
 
-        this.windowManager.AllowSpawnWindows = false;
+        WindowManager.Instance.AllowSpawnWindows = false;
 
         //loads and instantiates the gui
         GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["EmptyList"];
@@ -51,10 +49,6 @@ public class LoadTerminalContent : WindowContent {
         //makes a button for each save
         GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["BasicButton"];
         Transform display = gui.transform.Find("Mask").Find("Display");
-
-        
-
-        List<Terminal> loadedTerminals = new List<Terminal>();
 
         //loops through all the terminals
         for (int i = 0; i < order.Count; i++) {
@@ -82,41 +76,25 @@ public class LoadTerminalContent : WindowContent {
                 selectedSave += "/Terminals";
                 string[] terminals = Directory.GetDirectories(selectedSave);
 
-                foreach (string ter in terminals) {
+                foreach (string terminalPath in terminals) {
 
                     //terminal creation
-                    DirectoryInfo info = new DirectoryInfo(ter);
+                    DirectoryInfo info = new DirectoryInfo(terminalPath);
 
-                    string terJsonPath = ter + "/" + info.Name + ".json";
+                    string terJsonPath = terminalPath + "/" + info.Name + ".json";
                     TerminalData terData = Save.loadJson<TerminalData>(terJsonPath);
-                    Terminal terminal = new Terminal(terData);
-                    loadedTerminals.Add(terminal);
 
-                    string logicGraphPath = ter + "/LogicGraphs";
-                    string[] logicPaths = Directory.GetFiles(logicGraphPath);
+                    Terminal terminal = terData.getTerminal(terminalPath);
 
-                    foreach(string logicPath in logicPaths) {
-
-                        if (logicPath.EndsWith(".json")) {
-
-                            LogicGraphData lgd = Save.loadJson<LogicGraphData>(logicPath);
-                            //Debug.Log(lgd.Name);
-
-                            LogicGraph lg = new LogicGraph(lgd);
-                            terminal.addExtension(lg);
-                        }
-                    }
-
-                    //connects the TExtensions
-                    string TExtConnectionPath = ter + "/" + "TExtensionConnectionsData.json";
-                    TExtensionConnectionsData connectionData = Save.loadJson<TExtensionConnectionsData>(TExtConnectionPath);
-                    connectionData.buildConnections(terminal);
-
-                    //terminalManager.displayTerminal(terminal);
+                    //adds the terminal to the Terminal Manager
+                    GameObject go = new GameObject(terminalPath);
+                    TerminalController terminalController = go.AddComponent<TerminalController>();
+                    terminalController.setUp(terminal);
+                    terminalManager.addTerminalController(terminalController);
                 }
 
                 //clear all the windows
-                windowManager.removeAllWindows();
+                WindowManager.Instance.removeAllWindows();
             });
         }
     }

@@ -34,7 +34,6 @@ public class LogicGraphMouseController : MonoBehaviour {
         if (!hitTrans.name.Equals("BasicLogicComponent")) {
             hitTrans = hitTrans.parent;
         }
-        Debug.Log(hitTrans.name);
 
         LogicComponentController logicComponentController = hitTrans.GetComponent<LogicComponentController>();
         LogicComponent logicComponent = logicComponentController.LogicComponent;

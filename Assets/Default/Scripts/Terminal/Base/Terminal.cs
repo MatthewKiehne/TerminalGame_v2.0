@@ -38,10 +38,6 @@ public class Terminal {
         return this.extensions.Find(x => x.Name.Equals(name));
     }
 
-    public Terminal(TerminalData data) {
-        this.name = data.Name;
-    }
-
     /// <summary>
     /// Updates the extensions based on the number of periods the clock has passed 
     /// </summary>

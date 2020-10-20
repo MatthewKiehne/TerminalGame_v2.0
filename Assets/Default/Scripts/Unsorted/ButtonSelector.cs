@@ -30,8 +30,6 @@ public class ButtonSelector : MonoBehaviour {
                 this.buttons.Add(b);
                 b.onClick.AddListener( () => {
 
-                    Debug.Log(b.gameObject.transform.name);
-
                     //clears
                     //this.clear();
 

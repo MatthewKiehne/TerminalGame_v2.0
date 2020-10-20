@@ -7,7 +7,7 @@ public class GraphOutput : LinkComponent {
     private SendBridge sendBridge;
 
     public GraphOutput(Vector2Int position, int rotation, bool flipped, SendBridge sendBridge) :
-        base(position, new Vector2Int(BridgeComponent.BRIDGELENGTH, 1), rotation, flipped, 0, BridgeComponent.BRIDGELENGTH) {
+        base(position, new Vector2Int(LinkComponent.BRIDGELENGTH, 1), rotation, flipped, 0, LinkComponent.BRIDGELENGTH) {
 
         this.sendBridge = sendBridge;
     }
@@ -15,8 +15,8 @@ public class GraphOutput : LinkComponent {
     public override void setValues(List<Tuple> values) {
         //sets the receivers to the correct value
 
-        //this.sendData(int.Parse(values[0].Value));
-        //this.Name = values[1].Value;
+        this.sendData(int.Parse(values[0].Value));
+        this.sendBridge.Name = values[1].Value;
     }
 
     public override string getName() {

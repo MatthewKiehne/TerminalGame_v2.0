@@ -15,9 +15,17 @@ public class TerminalManager : MonoBehaviour {
         this.terminalControllers.Clear();
     }
 
-    public List<TerminalController> TerminalControllers {
+    public void addTerminalController(TerminalController controller) {
+        this.terminalControllers.Add(controller);
+    }
+
+    public bool removeTerminalController(TerminalController controller) {
+        return this.terminalControllers.Remove(controller);
+    }
+
+    public TerminalController[] TerminalControllers {
         get {
-            return this.terminalControllers;
+            return this.terminalControllers.ToArray();
         }
     }
 }

@@ -8,8 +8,6 @@ public class PassiveComponentController : GraphComponentController {
 
         this.graphComponent = passiveComponent;
 
-        //Debug.Log("set up " + passiveComponent.GetType().ToString() + " " + Time.frameCount);
-
         GameObject middle = this.transform.Find("Middle").gameObject;
 
         if(passiveComponent.GetType() == typeof(Reflector)) {

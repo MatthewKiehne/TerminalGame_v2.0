@@ -33,8 +33,6 @@ public abstract class LogicComponent : InteractiveComponent {
 
                 int index = int.Parse(tup.Name.Substring(receiverString.Length));
                 bool state = bool.Parse(tup.Value);
-
-                //Debug.Log(index + " " + state);
                 this.getReceiverAt(index).setActive(state);
             }
         }

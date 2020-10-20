@@ -14,8 +14,8 @@ public abstract class LinkComponent : InteractiveComponent {
 
         List<Tuple> result = new List<Tuple>();
 
-        //result.Add(new Tuple("state",this.state + ""));
-        //result.Add(new Tuple("name", this.name));  
+        result.Add(new Tuple("state",this.getExtensionConnection().State + ""));
+        result.Add(new Tuple("name", this.getExtensionConnection().Name));  
 
         return result;
     }

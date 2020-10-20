@@ -31,7 +31,7 @@ public class TempSceneInit : MonoBehaviour {
                 line = strReader.ReadLine();
             }
         } else {
-            Debug.LogError("txt not found");
+            throw new Exception("txt not found");
         }
 
         Terminal firstTerminal = new Terminal("First Test Terminal", new Clock(1f));
@@ -41,7 +41,7 @@ public class TempSceneInit : MonoBehaviour {
 
 
         Terminal emptyTerminal = new Terminal("Blank Graphs", new Clock(2f));
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 4; i++) {
             LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1));
             emptyTerminal.addExtension(tempEmptyGraph);
         }
@@ -61,7 +61,14 @@ public class TempSceneInit : MonoBehaviour {
             GameObject go = new GameObject(terminal.Name);
             TerminalController terminalController = go.AddComponent<TerminalController>();
             terminalController.setUp(terminal);
-            this.terminalManager.TerminalControllers.Add(terminalController);
+            this.terminalManager.addTerminalController(terminalController);
+        }
+    }
+
+    public void updateAllTerminals() {
+
+        foreach(TerminalController controller in terminalManager.TerminalControllers) {
+            controller.updateTime(controller.Terminal.Clock.MaxTime);
         }
     }
 
@@ -141,7 +148,7 @@ public class TempSceneInit : MonoBehaviour {
         wm.setActivityofCurrentWindows(false);
 
         //spawn load window
-        wm.spawnWindow(new Window("Load Save", 300, 250, new LoadTerminalContent(wm, this.terminalManager)));
+        wm.spawnWindow(new Window("Load Save", 300, 250, new LoadTerminalContent(this.terminalManager)));
 
         //disable other window from spawning
         wm.AllowSpawnWindows = false;

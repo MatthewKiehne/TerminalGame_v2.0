@@ -121,7 +121,6 @@ public abstract class InteractiveComponent : LightComponent {
         for (int i = 0; i < numRecievers; i++) {
             //Rect reciever = new Rect(position + new Vector2(.2f + i, .1f), sensorSize);
             Vector2 botLeft = position + recieverStartPos + toRecieverCorner + (incromentor * i);
-            //Debug.Log("Reciever: " + botLeft);
             Rect recieverRect = new Rect(botLeft, sensorSize);
 
             Receiver receiver = null;
@@ -145,7 +144,6 @@ public abstract class InteractiveComponent : LightComponent {
         //make the senders
         for (int i = 0; i < numSenders; i++) {
             Vector2 botLeft = position + senderStartPos + toSenderCorner + (incromentor * i);
-            //Debug.Log("Sendr: " + botLeft);
             Rect senderRect = new Rect(botLeft, sensorSize);
 
             Sender sender = new Sender(senderRect);

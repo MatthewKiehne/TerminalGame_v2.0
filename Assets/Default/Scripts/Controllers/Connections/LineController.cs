@@ -25,8 +25,6 @@ public class LineController : MonoBehaviour {
     public void updateSignal(bool state) {
         //udpates the signals for the wire
 
-        //Debug.Log(this.GetType() + " LineController - udateSignal state:" + state);
-
         this.getLines();
 
         if (state == true) {

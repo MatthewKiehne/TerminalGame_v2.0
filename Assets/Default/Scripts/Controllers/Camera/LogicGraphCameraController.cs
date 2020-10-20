@@ -93,14 +93,14 @@ public class LogicGraphCameraController : MonoBehaviour {
         //corrects the out of bounds
         if (updatedPosition.x < offset.x) {
             updatedPosition.x = offset.x;
-        } else if (updatedPosition.x > offset.x + graph.lightGraph.Width) {
-            updatedPosition.x = offset.x + graph.lightGraph.Width;
+        } else if (updatedPosition.x > offset.x + graph.LightGraph.Width) {
+            updatedPosition.x = offset.x + graph.LightGraph.Width;
         }
 
         if (updatedPosition.y < offset.y) {
             updatedPosition.y = offset.y;
-        } else if (updatedPosition.y > offset.y + graph.lightGraph.Height) {
-            updatedPosition.y = offset.y + graph.lightGraph.Height;
+        } else if (updatedPosition.y > offset.y + graph.LightGraph.Height) {
+            updatedPosition.y = offset.y + graph.LightGraph.Height;
         }
 
         //updates the position

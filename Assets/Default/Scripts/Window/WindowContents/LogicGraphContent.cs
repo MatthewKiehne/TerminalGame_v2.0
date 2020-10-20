@@ -230,7 +230,7 @@ public class LogicGraphContent : WindowContent {
                     if (this.currentState == EditorState.AddCompoent) {
 
                         this.component.Position = this.previousGridPosition;
-                        bool canPlace = this.logicGraphController.Graph.lightGraph.canPlace(this.component);
+                        bool canPlace = this.logicGraphController.Graph.LightGraph.canPlace(this.component);
 
                         this.mouseObject.transform.Find("X").gameObject.SetActive(!canPlace);
                         Vector2 worldMousePosition = this.getMouseWorldGridPosition();
@@ -241,7 +241,7 @@ public class LogicGraphContent : WindowContent {
                         Vector2 worldMousePosition = this.getMouseWorldGridPosition();
                         this.mouseObject.transform.position = worldMousePosition;
 
-                        GraphComponent graphComp = this.logicGraphController.Graph.lightGraph.getComponentAt(
+                        GraphComponent graphComp = this.logicGraphController.Graph.LightGraph.getComponentAt(
                             this.previousGridPosition.x, this.previousGridPosition.y);
 
                         SpriteRenderer rend = this.mouseObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -263,7 +263,7 @@ public class LogicGraphContent : WindowContent {
                 //adds the component
                 LightComponent comp = this.duplicateAt(this.component.GetType(), this.previousGridPosition, this.rotation, this.flipped);
 
-                if (this.logicGraphController.Graph.lightGraph.canPlace(comp) &&
+                if (this.logicGraphController.Graph.LightGraph.canPlace(comp) &&
                 this.inputs.CurrentFrameData.RaycastResults.Count != 0 &&
                 this.inputs.CurrentFrameData.RaycastResults[0].gameObject.Equals(this.rawImage.gameObject)) {
 
@@ -303,7 +303,7 @@ public class LogicGraphContent : WindowContent {
 
                         //can place component after entering value
                         etc.addErrorCheck((string value) => {
-                            return this.logicGraphController.Graph.lightGraph.canPlace(comp);
+                            return this.logicGraphController.Graph.LightGraph.canPlace(comp);
                         }, "Can not Place there");
 
                         this.spawnChildWindow(new Window(comp.GetType() + " Name", 200, 200, etc));
@@ -317,12 +317,12 @@ public class LogicGraphContent : WindowContent {
                 //removes the component
 
                 Vector2Int gridPosition = this.getMouseLocalGridPosition();
-                LightComponent hitComponent = this.graph.lightGraph.getComponentAt(gridPosition.x, gridPosition.y);
+                LightComponent hitComponent = this.graph.LightGraph.getComponentAt(gridPosition.x, gridPosition.y);
 
                 if (hitComponent != null) {
 
                     bool removedGOState = this.logicGraphController.ComponentManager.removeComponent(hitComponent);
-                    bool removeDataState = this.graph.lightGraph.removeComponent(hitComponent);
+                    bool removeDataState = this.graph.LightGraph.removeComponent(hitComponent);
 
                     if (removedGOState && removeDataState) {
                         this.logicGraphController.ComponentManager.reconnectRays();
@@ -340,7 +340,7 @@ public class LogicGraphContent : WindowContent {
     /// Add a Light Component to the Logic Graph
     /// </summary>
     private void addComponentToGraph(LightComponent comp) {
-        this.logicGraphController.Graph.lightGraph.addComponent(comp);
+        this.logicGraphController.Graph.LightGraph.addComponent(comp);
         GraphComponentController gcc = this.logicGraphController.ComponentManager.createComponent(comp);
         this.logicGraphController.ComponentManager.addComponent(gcc);
         this.logicGraphController.ComponentManager.reconnectRays();
@@ -372,13 +372,13 @@ public class LogicGraphContent : WindowContent {
 
         if (worldPoint.x < graphPosition.x) {
             worldPoint.x = graphPosition.x;
-        } else if (worldPoint.x > graphPosition.x + this.logicGraphController.Graph.lightGraph.Width - 1) {
-            worldPoint.x = graphPosition.x + this.logicGraphController.Graph.lightGraph.Width - 1;
+        } else if (worldPoint.x > graphPosition.x + this.logicGraphController.Graph.LightGraph.Width - 1) {
+            worldPoint.x = graphPosition.x + this.logicGraphController.Graph.LightGraph.Width - 1;
         }
         if (worldPoint.y < graphPosition.y) {
             worldPoint.y = graphPosition.y;
-        } else if (worldPoint.y > graphPosition.y + this.logicGraphController.Graph.lightGraph.Height - 1) {
-            worldPoint.y = graphPosition.y + this.logicGraphController.Graph.lightGraph.Height - 1;
+        } else if (worldPoint.y > graphPosition.y + this.logicGraphController.Graph.LightGraph.Height - 1) {
+            worldPoint.y = graphPosition.y + this.logicGraphController.Graph.LightGraph.Height - 1;
         }
 
         return new Vector2Int(Mathf.FloorToInt(worldPoint.x), Mathf.FloorToInt(worldPoint.y));
@@ -474,7 +474,7 @@ public class LogicGraphContent : WindowContent {
 
         xGO.transform.position = gcc.transform.position;
 
-        bool placeable = this.logicGraphController.Graph.lightGraph.canPlace(this.component);
+        bool placeable = this.logicGraphController.Graph.LightGraph.canPlace(this.component);
 
         if (placeable) {
             xGO.gameObject.SetActive(false);

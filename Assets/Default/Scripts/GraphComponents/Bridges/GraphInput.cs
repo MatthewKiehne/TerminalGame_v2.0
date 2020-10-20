@@ -8,7 +8,7 @@ public class GraphInput : LinkComponent
     private ReceiveBridge reveivedBridge;
 
     public GraphInput(Vector2Int position, int rotation, bool flipped, ReceiveBridge receiveBridge) :
-        base(position, new Vector2Int(BridgeComponent.BRIDGELENGTH, 1), rotation, flipped, LinkComponent.BRIDGELENGTH, 0) {
+        base(position, new Vector2Int(LinkComponent.BRIDGELENGTH, 1), rotation, flipped, LinkComponent.BRIDGELENGTH, 0) {
 
         this.reveivedBridge = receiveBridge;
         this.reveivedBridge.OnSetState += this.onStateChange;
@@ -17,8 +17,8 @@ public class GraphInput : LinkComponent
     public override void setValues(List<Tuple> values) {
         //sets the receivers to the correct value
 
-        //this.setState(int.Parse(values[0].Value));
-        //this.Name = values[1].Value;
+        this.reveivedBridge.setState(int.Parse(values[0].Value));
+        this.reveivedBridge.Name = values[1].Value;
     }
 
     /// <summary>

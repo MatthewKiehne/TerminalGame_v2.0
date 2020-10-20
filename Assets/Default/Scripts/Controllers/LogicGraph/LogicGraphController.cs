@@ -16,7 +16,7 @@ public class LogicGraphController : MonoBehaviour {
         this.logicGraph = logicGraph;
         this.bottomLeftWorld = bottomLeftWorld;
         this.transform.position = bottomLeftWorld;
-        this.changeSize(logicGraph.lightGraph.Width, logicGraph.lightGraph.Height);
+        this.changeSize(logicGraph.LightGraph.Width, logicGraph.LightGraph.Height);
         this.makeComponentManager(logicGraph, bottomLeftWorld);
         this.logicGraphManager = logicGraphManager;
     }
@@ -71,7 +71,7 @@ public class LogicGraphController : MonoBehaviour {
         } else {
             throw new System.Exception("Tried to destroy the component manager but it was null");
         }
-        //Debug.Log(this.logicGraphManager.removeGraphController(this));
+;
         GameObject.Destroy(this.gameObject);
     }
 

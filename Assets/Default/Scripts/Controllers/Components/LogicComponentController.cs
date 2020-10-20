@@ -10,8 +10,6 @@ public class LogicComponentController : InteractiveComponentController {
 
         this.graphComponent = logicComponent;
 
-        //Debug.Log("set up " + logicComponent.GetType().ToString() + " " + Time.frameCount);
-
         this.logicComponent = (LogicComponent)logicComponent;
 
 

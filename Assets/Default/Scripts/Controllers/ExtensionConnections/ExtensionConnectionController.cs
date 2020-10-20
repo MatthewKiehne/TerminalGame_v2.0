@@ -384,7 +384,7 @@ public class ExtensionConnectionController : MonoBehaviour {
                 rec = this.findReceiveBridgeByName(to.ReceiveBridges, toBridgeSelect.Name);
 
             } catch (Exception ex) {
-                Debug.Log(ex.ToString());
+                throw ex;
             }
 
             if (send != null && rec != null) {

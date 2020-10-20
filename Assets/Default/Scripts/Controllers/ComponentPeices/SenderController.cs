@@ -17,7 +17,6 @@ public class SenderController : MonoBehaviour {
 
     public void updateSignal(bool state) {
         //updates the visuals of the lines
-        //Debug.Log("SenderController -> UpdateSignal(): line controllers:" + this.lineControllers.Count);
         for(int i = 0; i < this.lineControllers.Count; i++) {
             this.lineControllers[i].updateSignal(state);
         }
@@ -25,7 +24,6 @@ public class SenderController : MonoBehaviour {
 
     public void makeNewRays() {
         //destroys the old rays and makes new ones
-        //Debug.Log("SenderController -> makeNewRays(): startCount:" + this.lineControllers.Count);
         this.destroyRays();
         this.createRays();
     }
@@ -37,7 +35,6 @@ public class SenderController : MonoBehaviour {
         }
         this.lineControllers.Clear();
         this.lineControllers = new List<LineController>();
-        //Debug.Log("SenderController -> destroyRays(): count:" + this.lineControllers.Count);
     }
 
     private void createRays() {
@@ -66,8 +63,6 @@ public class SenderController : MonoBehaviour {
             lc.setPoints(VertexExtension.toVector3Array(lines.ToArray()));
             this.lineControllers.Add(lc);
         }
-
-        //Debug.Log("SenderController -> createRays(): count" + this.lineControllers.Count);
     }
 
     private List<List<Vector2>> getPoints(Vector2 startingPosition, Vector2 startingDirection) {
@@ -77,8 +72,6 @@ public class SenderController : MonoBehaviour {
     private List<List<Vector2>> getPoints(Vector2 startingPosition, Vector2 startingDirection, int bounceNum) {
         //return a list of lines
         //the list inside the list are the positions for the the given line
-
-        //Debug.Log("SenderController -> getPoints()");
 
         Vector2 currentPoint = startingPosition;
         Vector2 currentDirection = startingDirection;
@@ -99,8 +92,6 @@ public class SenderController : MonoBehaviour {
             if(currentHit.collider != null) {
 
                 currentLines.Add(currentHit.point);
-
-                //Debug.Log(currentHit.collider.name + " B:" + bounceCounter + " Dir:" + currentDirection + " Point:" + currentHit.point);
 
                 MirrorController mc = currentHit.collider.GetComponent<MirrorController>();
                 PassingMirrorController pmc = currentHit.collider.GetComponent<PassingMirrorController>();

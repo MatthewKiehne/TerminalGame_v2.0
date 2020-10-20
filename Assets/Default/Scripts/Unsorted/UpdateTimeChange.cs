@@ -23,7 +23,4 @@ public class UpdateTimeChange : MonoBehaviour {
             this.toggle.setColor(this.image.color);
         });
     }
-
-
-
 }

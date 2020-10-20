@@ -19,12 +19,18 @@ public class Clock {
 
         timePassed = time + timePassed;
 
-        if (timePassed > this.maxTime) {
+        if (timePassed >= this.maxTime) {
 
             updatesPassed = (int)(timePassed / maxTime);
             timePassed = timePassed % maxTime;
         }
 
         return updatesPassed;
+    }
+
+    public float MaxTime {
+        get {
+            return this.maxTime;
+        }
     }
 }

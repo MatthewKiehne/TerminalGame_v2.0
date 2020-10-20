@@ -17,7 +17,7 @@ public class LogicGraphComponentManager : MonoBehaviour {
         //loads all of the components on to the graph
         this.bottomLeftofGraph = bottomLeft;
 
-        List<LightComponent> graphComponents = logicGraph.lightGraph.getAllGraphComponents();
+        List<LightComponent> graphComponents = logicGraph.LightGraph.getAllGraphComponents();
 
         //makes all the components
         foreach (GraphComponent gc in graphComponents) {
