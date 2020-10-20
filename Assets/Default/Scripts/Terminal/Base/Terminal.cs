@@ -120,6 +120,12 @@ public class Terminal {
         return this.extensions.IndexOf(extension);
     }
 
+    public TExtension[] Extensions {
+        get {
+            return this.extensions.ToArray();
+        }
+    }
+
     public Clock Clock {
         get {
             return this.clock;

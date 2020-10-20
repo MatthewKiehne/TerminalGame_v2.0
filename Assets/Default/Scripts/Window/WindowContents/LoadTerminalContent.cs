@@ -39,7 +39,7 @@ public class LoadTerminalContent : WindowContent {
         this.windowManager.AllowSpawnWindows = false;
 
         //loads and instantiates the gui
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EmptyList"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["EmptyList"];
         GameObject gui = GameObject.Instantiate(guiPrefab);
         gui.transform.SetParent(contentPanel, false);
 
@@ -49,7 +49,7 @@ public class LoadTerminalContent : WindowContent {
         List<string> order = di.EnumerateDirectories().OrderBy(d => d.CreationTime).Select(d => d.Name).ToList();
 
         //makes a button for each save
-        GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicButton"];
+        GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["BasicButton"];
         Transform display = gui.transform.Find("Mask").Find("Display");
 
         

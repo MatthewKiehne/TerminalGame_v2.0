@@ -13,7 +13,7 @@ public class PassiveComponentController : GraphComponentController {
         GameObject middle = this.transform.Find("Middle").gameObject;
 
         if(passiveComponent.GetType() == typeof(Reflector)) {
-            GameObject mirrorBasePrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["MirrorBase"];
+            GameObject mirrorBasePrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["MirrorBase"];
 
             GameObject back = GameObject.Instantiate(mirrorBasePrefab);
             //back.GetComponent<PolygonCollider2D>().enabled = true;

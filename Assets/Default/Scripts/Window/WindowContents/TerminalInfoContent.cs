@@ -28,7 +28,7 @@ public class TerminalInfoContent : WindowContent
 
         WindowManager windowManager = GameObject.Find("WindowManager").GetComponent<WindowManager>();
 
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalInfo"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["TerminalInfo"];
         GameObject gui = GameObject.Instantiate(guiPrefab);
         gui.transform.SetParent(contentPanel, false);
 
@@ -92,7 +92,7 @@ public class TerminalInfoContent : WindowContent
     private void populateExtensions() {
         //populates the list with all the extensions
 
-        GameObject itemPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["ItemButton"];
+        GameObject itemPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["ItemButton"];
 
         for (int i = 0; i < this.terminalController.Terminal.extensionLength(); i++) {
 

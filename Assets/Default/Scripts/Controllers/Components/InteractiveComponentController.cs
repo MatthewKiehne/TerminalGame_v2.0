@@ -56,7 +56,7 @@ public abstract class InteractiveComponentController : GraphComponentController 
 
         Transform middle = this.transform.Find("MiddleBody");
 
-        Texture2D gateTexture = (Texture2D)SceneResouces.SceneObjects[typeof(Texture2D)][name];
+        Texture2D gateTexture = (Texture2D)SceneResouces.SceneObjects["Default"][typeof(Texture2D)][name];
         SpriteRenderer gateSpriteRenderer = middle.transform.Find("LogicComponentSprite").GetComponent<SpriteRenderer>();
         Sprite gateSprite = Sprite.Create(gateTexture, new Rect(0, 0, gateTexture.width, gateTexture.height), Vector2.one * .5f, gateTexture.width);
         gateSpriteRenderer.sprite = gateSprite;

@@ -12,7 +12,7 @@ public class ClockListContent : WindowContent {
         //loads and instantiates the gui
         //GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EmptyList"];
 
-        Debug.Log(SceneResouces.SceneObjects[typeof(GameObject)].ContainsKey("EmptyList"));
+        //Debug.Log(SceneResouces.SceneObjects["Default"][typeof(GameObject)].ContainsKey("EmptyList"));
 
 
         /*

@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class SceneResouces {
 
-    public static Dictionary<Type, Dictionary<string, System.Object>> SceneObjects = 
-        new Dictionary<Type, Dictionary<string, System.Object>>();
+    public static Dictionary<string,            //Name of the File
+        Dictionary<Type,                        //Type of the object you want
+        Dictionary<string,                      //Name of the object 
+            System.Object>>> SceneObjects = new Dictionary<string, Dictionary<Type, Dictionary<string, object>>>();
 
+    /// <summary>
+    /// Loads the object at the path in SceneObjects Dictionary
+    /// </summary>
     public static void loadResources(string path) {
         //load an object from resources and stores it in the dictionary
         
@@ -16,11 +22,17 @@ public static class SceneResouces {
         if (obj != null) {
             Type typeParameterType = obj.GetType();
 
-            if (!SceneObjects.ContainsKey(typeParameterType)) {
-                SceneObjects.Add(typeParameterType, new Dictionary<string, object>());
+            string[] parts = path.Split(new char[]{ '/' });
+
+            if (!SceneObjects.ContainsKey(parts[0])) {
+                SceneObjects.Add(parts[0], new Dictionary<Type, Dictionary<string, object>>());
             }
 
-            SceneObjects[typeParameterType].Add(obj.name, obj);
+            if (!SceneObjects[parts[0]].ContainsKey(typeParameterType)) {
+                SceneObjects[parts[0]].Add(typeParameterType, new Dictionary<string, object>());
+            }
+
+            SceneObjects[parts[0]][typeParameterType].Add(obj.name, obj);
 
         } else {
             throw new Exception("Load Reources failed to find path: " + path);
@@ -28,7 +40,6 @@ public static class SceneResouces {
     }
 
     public static void clearResources() {
-        //clears the dictionary
-        
+        //clears the dictionary 
     }
 }

@@ -31,7 +31,7 @@ public class BridgeComponentController : InteractiveComponentController {
         SpriteRenderer rend = middle.GetChild(0).GetComponent<SpriteRenderer>();
         rend.transform.localScale = Vector3.one;
         string labelPrefabName = "LGBridgeLabel";
-        GameObject labelPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)][labelPrefabName];
+        GameObject labelPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)][labelPrefabName];
 
 
         GameObject labelGameObject = GameObject.Instantiate(labelPrefab);

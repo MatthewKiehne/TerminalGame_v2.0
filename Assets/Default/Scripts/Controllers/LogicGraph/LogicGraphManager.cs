@@ -12,7 +12,7 @@ public class LogicGraphManager : MonoBehaviour {
 
     public LogicGraphController displayLogicGraph(LogicGraph graph, Vector3 bottomLeft) {
 
-        GameObject graphPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Graph"];
+        GameObject graphPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Graph"];
         GameObject go = Instantiate(graphPrefab).gameObject;
 
         Vector3 offset = new Vector3(graph.lightGraph.Width / 2, graph.lightGraph.Height / 2, 0);

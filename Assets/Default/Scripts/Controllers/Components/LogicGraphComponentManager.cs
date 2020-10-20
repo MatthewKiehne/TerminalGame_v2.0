@@ -83,18 +83,18 @@ public class LogicGraphComponentManager : MonoBehaviour {
         //logic compoents
         if (comp.GetType().BaseType == typeof(LogicComponent)) {
 
-            prefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicLogicComponent"];
+            prefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["BasicLogicComponent"];
             resultType = typeof(LogicComponentController);
 
             //passive components
         } else if (comp.GetType().BaseType == typeof(PassiveComponent)) {
 
-            prefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["PassingMirror"];
+            prefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["PassingMirror"];
             resultType = typeof(PassiveComponentController);
 
         } else if (comp.GetType().BaseType == typeof(LinkComponent)) {
 
-            prefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicLogicComponent"];
+            prefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["BasicLogicComponent"];
             resultType = typeof(BridgeComponentController);
 
         } else {

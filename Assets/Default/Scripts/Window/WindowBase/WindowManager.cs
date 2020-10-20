@@ -53,7 +53,7 @@ public class WindowManager : MonoBehaviour {
 
             //Debug.Log("WindowManager -> spawnWindow(): create new window");
 
-            GameObject windowPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Window"];
+            GameObject windowPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Window"];
 
             win = Instantiate(windowPrefab);
             win.transform.SetParent(canvas.transform, false);

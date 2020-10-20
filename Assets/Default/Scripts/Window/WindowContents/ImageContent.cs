@@ -26,7 +26,7 @@ public class ImageContent : WindowContent {
 
     public override void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas) {
 
-        GameObject imagePrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Image"];
+        GameObject imagePrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Image"];
         GameObject imageGO = GameObject.Instantiate(imagePrefab, contentPanel.transform, false);
         imageGO.GetComponent<Image>().sprite = this.sprite;
     }

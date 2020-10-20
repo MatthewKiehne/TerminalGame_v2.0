@@ -55,7 +55,7 @@ public class SenderController : MonoBehaviour {
 
         List<List<Vector2>> allLines = this.getPoints(child.position, child.up);
 
-        GameObject rayPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Ray"];
+        GameObject rayPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Ray"];
 
         foreach (List<Vector2> lines in allLines) {
 

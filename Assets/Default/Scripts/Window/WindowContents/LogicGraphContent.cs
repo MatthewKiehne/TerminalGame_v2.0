@@ -93,7 +93,7 @@ public class LogicGraphContent : WindowContent {
         Vector2 graphPosition = this.camera.transform.position;
         this.logicGraphController = this.logicGraphManager.displayLogicGraph(this.graph, graphPosition);
 
-        GameObject image = GameObject.Instantiate((GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["GraphEditor"]);
+        GameObject image = GameObject.Instantiate((GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["GraphEditor"]);
 
         this.rawImage = image.GetComponent<RawImage>();
         image.transform.SetParent(contentPanel.transform, false);
@@ -492,7 +492,7 @@ public class LogicGraphContent : WindowContent {
         //makes the red "X" for the graph
 
         GameObject xGO = new GameObject("X");
-        Texture2D xTex = (Texture2D)SceneResouces.SceneObjects[typeof(Texture2D)]["X"];
+        Texture2D xTex = (Texture2D)SceneResouces.SceneObjects["Default"][typeof(Texture2D)]["X"];
         SpriteRenderer xRende = xGO.AddComponent<SpriteRenderer>();
         Sprite xSprite = Sprite.Create(xTex, new Rect(0, 0, xTex.width, xTex.height), Vector2.one * .5f, xTex.width);
         xRende.sprite = xSprite;

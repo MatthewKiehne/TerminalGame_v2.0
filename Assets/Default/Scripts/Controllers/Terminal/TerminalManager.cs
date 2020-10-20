@@ -15,13 +15,6 @@ public class TerminalManager : MonoBehaviour {
         this.terminalControllers.Clear();
     }
 
-    public void Update() {
-        
-        foreach(TerminalController ter in this.terminalControllers) {
-            ter.updateTime(Time.deltaTime);
-        }
-    }
-
     public List<TerminalController> TerminalControllers {
         get {
             return this.terminalControllers;

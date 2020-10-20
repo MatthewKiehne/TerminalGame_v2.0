@@ -90,7 +90,7 @@ public class EnterTextContent : WindowContent {
 
     public override void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas) {
 
-        GameObject fields = GameObject.Instantiate((GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["EnterTextPanel"]);
+        GameObject fields = GameObject.Instantiate((GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["EnterTextPanel"]);
         fields.transform.SetParent(contentPanel.transform, false);
 
         this.inputField = fields.transform.Find("InputField").GetComponent<InputField>();

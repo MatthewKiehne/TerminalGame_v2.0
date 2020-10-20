@@ -15,12 +15,12 @@ public class TerminalListContent : WindowContent {
 
 
         //loads and instantiates the gui
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalList"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["TerminalList"];
         GameObject gui = GameObject.Instantiate(guiPrefab);
         gui.transform.SetParent(contentPanel, false);
 
         //makes a button for each clock
-        GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["BasicButton"];
+        GameObject buttonPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["BasicButton"];
         Transform display = gui.transform.Find("EmptyList").Find("Mask").Find("Display");
         WindowManager windowManager = GameObject.Find("WindowManager").GetComponent<WindowManager>();
 

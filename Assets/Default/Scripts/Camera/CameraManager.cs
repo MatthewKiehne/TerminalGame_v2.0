@@ -22,7 +22,7 @@ public class CameraManager : MonoBehaviour {
             throw new System.Exception("camra space: -1. There is not a space for a new camera");
         }
 
-        GameObject cameraPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Camera"];
+        GameObject cameraPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Camera"];
 
         GameObject c = Instantiate(cameraPrefab);
         c.transform.position = new Vector3(offset.x * (space + 1), 0, -10);

@@ -25,9 +25,9 @@ public class TerminalConnectionsContent : WindowContent {
 
     public override void spawnContents(WindowController windowController, Transform contentPanel, Canvas canvas) {
 
-        this.connectionPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["Connection"];
+        this.connectionPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Connection"];
 
-        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects[typeof(GameObject)]["TerminalConnections"];
+        GameObject guiPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["TerminalConnections"];
         this.baseContentPanel = GameObject.Instantiate(guiPrefab);
         this.baseContentPanel.transform.SetParent(contentPanel, false);
 
