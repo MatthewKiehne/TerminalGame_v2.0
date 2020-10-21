@@ -3,12 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terminal {
+public class Terminal
+{
 
     private string name;
     private Clock clock;
 
+    /// <summary>
+    /// Holds all the TExtensions in this Terminal
+    /// </summary>
     private List<TExtension> extensions = new List<TExtension>();
+
+    /// <summary>
+    /// holds all the connections between connections this Terminal contains
+    /// </summary>
+    public List<ExtensionConnection> interiorConnections;
 
     /// <summary>
     /// Gets called after an Extension has been added to the Terminal
@@ -25,13 +34,26 @@ public class Terminal {
     /// </summary>
     public event Action OnTerminalUpdate;
 
+    /// <summary>
+    /// Gets called after an ExtensionConnection has been added to InteriorConnections
+    /// </summary>
+    public event Action OnConnectionAdd;
+
+    /// <summary>
+    /// Called after an ExtensionConnection ahs been removed from InteriorConnections
+    /// </summary>
+    public event Action OnConnectionRemove;
+
     public Terminal(string name) {
         this.name = name;
+        this.interiorConnections = new List<ExtensionConnection>();
+        this.clock = new Clock(1f);
     }
 
     public Terminal(string name, Clock clock) {
         this.name = name;
         this.clock = clock;
+        this.interiorConnections = new List<ExtensionConnection>();
     }
 
     public TExtension findExtension(string name) {
@@ -81,13 +103,15 @@ public class Terminal {
 
         bool result = true;
 
+        /*
         //disconnect 
-        foreach(SendBridge send in extension.SendBridges) {
+        foreach (SendBridge send in extension.SendBridges) {
             send.clearConnections();
         }
-        foreach(ReceiveBridge rec in extension.ReceiveBridges) {
+        foreach (ReceiveBridge rec in extension.ReceiveBridges) {
             rec.clearConnections();
         }
+        */
 
         result = this.extensions.Remove(extension);
 
@@ -122,17 +146,60 @@ public class Terminal {
         }
     }
 
+    /// <summary>
+    /// Returns all the ExtensionConnections between TExtensions within this Terminal
+    /// </summary>
+    public ExtensionConnection[] InteriorConnections() {
+        return this.interiorConnections.ToArray();
+    }
+
+    /// <summary>
+    /// Add an ExtensionConnection to InteriorConnections
+    /// </summary>
+    public bool addConnection(ExtensionConnection connection) {
+
+        bool result = false;
+        TExtension fromExtension = Array.Find(this.Extensions, extension => extension.Equals(connection.FromExtension));
+        TExtension toExtension = Array.Find(this.Extensions, extension => extension.Equals(connection.ToExtension));
+
+
+        if (connection.FromTerminal.Equals(this) &&
+            fromExtension != null &&
+            Array.Exists(fromExtension.SendNodes, bridge => bridge.Equals(connection.FromNode)) &&
+
+            connection.ToTerminal.Equals(this) &&
+            toExtension != null &&
+            Array.Exists(toExtension.ReceiveNodes, bridge => bridge.Equals(connection.ToNode))) {
+
+            this.interiorConnections.Add(connection);
+            result = true;
+            this.OnConnectionAdd?.Invoke();
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Removes the ExtensionConnection from InteriorConnections
+    /// </summary>
+    public bool removeConnection(ExtensionConnection connection) {
+
+        ExtensionConnection found = this.interiorConnections.Find(con => con.Equals(connection));
+
+        if(found != null) {
+            found.destroy();
+            this.interiorConnections.Remove(found);
+            this.OnConnectionRemove?.Invoke();
+        }
+
+        return found != null;
+    }
+
     public Clock Clock {
-        get {
-            return this.clock;
-        }
-        set {
-            this.clock = value;
-        }
+        get { return this.clock; }
+        set { this.clock = value; }
     }
     public string Name {
-        get {
-            return this.name;
-        }
+        get { return this.name; }
     }
 }

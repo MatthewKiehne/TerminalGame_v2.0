@@ -13,7 +13,7 @@ public class LogicGraphComponentManager : MonoBehaviour {
         Invoke("reconnectRays", .02f);
     }
 
-    public void loadComponents(LogicGraph logicGraph, Vector3 bottomLeft) {
+    public void loadComponents(LogicChip logicGraph, Vector3 bottomLeft) {
         //loads all of the components on to the graph
         this.bottomLeftofGraph = bottomLeft;
 

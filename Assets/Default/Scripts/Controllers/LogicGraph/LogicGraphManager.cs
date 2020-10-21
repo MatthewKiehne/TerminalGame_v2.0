@@ -10,7 +10,7 @@ public class LogicGraphManager : MonoBehaviour {
 
     private List<LogicGraphController> graphControllers = new List<LogicGraphController>();
 
-    public LogicGraphController displayLogicGraph(LogicGraph graph, Vector3 bottomLeft) {
+    public LogicGraphController displayLogicGraph(LogicChip graph, Vector3 bottomLeft) {
 
         GameObject graphPrefab = (GameObject)SceneResouces.SceneObjects["Default"][typeof(GameObject)]["Graph"];
         GameObject go = Instantiate(graphPrefab).gameObject;

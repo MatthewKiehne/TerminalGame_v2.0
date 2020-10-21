@@ -36,13 +36,13 @@ public class TempSceneInit : MonoBehaviour {
 
         Terminal firstTerminal = new Terminal("First Test Terminal", new Clock(1f));
 
-        LogicGraph emptyGraph = new LogicGraph(100, 100, "Empty Graph");
+        LogicChip emptyGraph = new LogicChip(100, 100, "Empty Graph");
         firstTerminal.addExtension(emptyGraph);
 
 
         Terminal emptyTerminal = new Terminal("Blank Graphs", new Clock(2f));
         for(int i = 0; i < 4; i++) {
-            LogicGraph tempEmptyGraph = new LogicGraph(500, 500, "Graph No." + (i + 1));
+            LogicChip tempEmptyGraph = new LogicChip(500, 500, "Graph No." + (i + 1));
             emptyTerminal.addExtension(tempEmptyGraph);
         }
 
@@ -125,11 +125,11 @@ public class TempSceneInit : MonoBehaviour {
                 for (int i = 0; i < ter.Terminal.extensionLength(); i++) {
 
                     TExtension extension = ter.Terminal.extensionAt(i);
-                    if (extension.GetType() == typeof(LogicGraph)) {
+                    if (extension.GetType() == typeof(LogicChip)) {
 
                         string name = extension.Name + ".json";
 
-                        LogicGraph lg = (LogicGraph)extension;
+                        LogicChip lg = (LogicChip)extension;
                         Save.saveJson<LogicGraphData>(new LogicGraphData(lg), tempPath, name);
                     }
                 }

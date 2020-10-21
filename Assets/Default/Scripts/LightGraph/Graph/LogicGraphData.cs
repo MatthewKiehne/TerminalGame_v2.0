@@ -18,7 +18,7 @@ public class LogicGraphData
     /// <summary>
     /// Creates savable data from a LogicGraph
     /// </summary>
-    public LogicGraphData(LogicGraph graph) {
+    public LogicGraphData(LogicChip graph) {
 
         this.Name = graph.Name;
         this.Width = graph.LightGraph.Width;
@@ -34,9 +34,9 @@ public class LogicGraphData
     /// <summary>
     /// Creates a Logic Graph from the data in this Class
     /// </summary>
-    public LogicGraph getLogicGraph() {
+    public LogicChip getLogicGraph() {
 
-        LogicGraph result = new LogicGraph(this.Width, this.Height, this.Name);
+        LogicChip result = new LogicChip(this.Width, this.Height, this.Name);
 
         foreach (GraphComponentData gcd in this.Components) {
 
@@ -59,13 +59,13 @@ public class LogicGraphData
 
                         lightComponent = new GraphOutput(new Vector2Int(gcd.Position[0], gcd.Position[1]),
                             gcd.Rotaiton,
-                            gcd.Flipped, new SendBridge("Blank"));
+                            gcd.Flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.SEND));
 
                     } else if (type == typeof(GraphInput)) {
 
                         lightComponent = new GraphInput(new Vector2Int(gcd.Position[0], gcd.Position[1]),
                             gcd.Rotaiton,
-                            gcd.Flipped, new ReceiveBridge("Blank"));
+                            gcd.Flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.RECEIVE));
                     } else {
                         throw new Exception(type + " is not supported when loading data");
                     }

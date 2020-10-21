@@ -5,19 +5,19 @@ using UnityEngine;
 public class GraphInput : LinkComponent
 {
 
-    private ReceiveBridge reveivedBridge;
+    private ExtensionNode reveivedBridge;
 
-    public GraphInput(Vector2Int position, int rotation, bool flipped, ReceiveBridge receiveBridge) :
+    public GraphInput(Vector2Int position, int rotation, bool flipped, ExtensionNode receiveBridge) :
         base(position, new Vector2Int(LinkComponent.BRIDGELENGTH, 1), rotation, flipped, LinkComponent.BRIDGELENGTH, 0) {
 
         this.reveivedBridge = receiveBridge;
-        this.reveivedBridge.OnSetState += this.onStateChange;
+        this.reveivedBridge.OnSetValue += this.onStateChange;
     }
 
     public override void setValues(List<Tuple> values) {
         //sets the receivers to the correct value
 
-        this.reveivedBridge.setState(int.Parse(values[0].Value));
+        this.reveivedBridge.Value = (int.Parse(values[0].Value));
         this.reveivedBridge.Name = values[1].Value;
     }
 
@@ -44,7 +44,7 @@ public class GraphInput : LinkComponent
         return this.reveivedBridge.Name;
     }
 
-    public override ExtensionConnection getExtensionConnection() {
+    public override ExtensionNode getExtensionConnection() {
         return this.reveivedBridge;
     }
 }

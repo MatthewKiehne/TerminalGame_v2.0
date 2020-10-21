@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LogicGraph : TExtension
+public class LogicChip : TExtension
 {
     private LightGraph lightGraph;
 
-    public LogicGraph(int width, int height, string name) : base(name) {
+    public LogicChip(int width, int height, string name) : base(name) {
 
         this.lightGraph = new LightGraph(this, width, height);
     }
@@ -23,10 +23,10 @@ public class LogicGraph : TExtension
     public override void clearReceivers() {
         //clears all the receiver bridges and the interactive components
 
-        List<ExtensionConnection> allBridges = this.AllBridges();
+        ExtensionNode[] allBridges = this.AllBridges();
 
-        for (int i = 0; i < allBridges.Count; i++) {
-            allBridges[i].clearState();
+        for (int i = 0; i < allBridges.Length; i++) {
+            allBridges[i].clearValue();
         }
 
         this.lightGraph.clearReceivers();

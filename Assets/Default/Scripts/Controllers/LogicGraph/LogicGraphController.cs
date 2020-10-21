@@ -5,13 +5,13 @@ using UnityEngine;
 public class LogicGraphController : MonoBehaviour {
     // Start is called before the first frame update
 
-    private LogicGraph logicGraph;
+    private LogicChip logicGraph;
     private Vector2 bottomLeftWorld;
 
     private LogicGraphComponentManager componentManager;
     private LogicGraphManager logicGraphManager;
 
-    public void setUp(LogicGraph logicGraph, Vector2 bottomLeftWorld, LogicGraphManager logicGraphManager) {
+    public void setUp(LogicChip logicGraph, Vector2 bottomLeftWorld, LogicGraphManager logicGraphManager) {
 
         this.logicGraph = logicGraph;
         this.bottomLeftWorld = bottomLeftWorld;
@@ -50,7 +50,7 @@ public class LogicGraphController : MonoBehaviour {
         leftC.size = new Vector2(1, height);
     }
 
-    private void makeComponentManager(LogicGraph logicGraph, Vector3 bottomLeft) {
+    private void makeComponentManager(LogicChip logicGraph, Vector3 bottomLeft) {
 
         GameObject go = new GameObject("ComponentManager");
         go.transform.SetParent(this.transform, false);
@@ -88,7 +88,7 @@ public class LogicGraphController : MonoBehaviour {
         }
     }
 
-    public LogicGraph Graph {
+    public LogicChip Graph {
         get {
             return this.logicGraph;
         }

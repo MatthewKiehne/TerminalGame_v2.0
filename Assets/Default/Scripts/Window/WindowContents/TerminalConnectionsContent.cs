@@ -33,6 +33,7 @@ public class TerminalConnectionsContent : WindowContent {
 
         Transform list = this.baseContentPanel.transform.Find("EmptyList").Find("Mask").Find("Display");
 
+        //add new connection
         Transform header = this.baseContentPanel.transform.Find("Header");
         Button addConnection = header.Find("Add").GetComponent<Button>();
         Button refresh = header.Find("Refresh").GetComponent<Button>();
@@ -56,13 +57,14 @@ public class TerminalConnectionsContent : WindowContent {
 
     private void populateConnections() {
         //creates a list of all the connections
+        /*
 
         Transform list = this.baseContentPanel.transform.Find("EmptyList").Find("Mask").Find("Display");
 
         for (int x = 0; x < this.terminal.extensionLength(); x++) {
             TExtension extension = this.terminal.extensionAt(x);
 
-            foreach (SendBridge send in extension.SendBridges) {
+            foreach (ExtensionNode send in extension.SendBridges) {
 
                 int total = send.ReceiveBridges.Count;
                 for (int i = 0; i < total; i++) {
@@ -76,6 +78,7 @@ public class TerminalConnectionsContent : WindowContent {
                 }
             }
         }
+        */
     }
 
     private void clearConnections() {
@@ -88,7 +91,7 @@ public class TerminalConnectionsContent : WindowContent {
         }
     }
 
-    private TExtension findReceiveBridge(ReceiveBridge input) {
+    private TExtension findReceiveBridge(ExtensionNode input) {
         //finds the extension that the receiveBridge belongs to
 
         TExtension result = null;
@@ -97,9 +100,9 @@ public class TerminalConnectionsContent : WindowContent {
         while (extensionCounter < this.terminal.extensionLength() && result == null) {
 
             int receiveCoutner = 0;
-            while (receiveCoutner < this.terminal.extensionAt(extensionCounter).ReceiveBridges.Length && result == null) {
+            while (receiveCoutner < this.terminal.extensionAt(extensionCounter).ReceiveNodes.Length && result == null) {
 
-                if (input.Equals(this.terminal.extensionAt(extensionCounter).ReceiveBridges[receiveCoutner])) {
+                if (input.Equals(this.terminal.extensionAt(extensionCounter).ReceiveNodes[receiveCoutner])) {
                     result = this.terminal.extensionAt(extensionCounter);
                 }
 

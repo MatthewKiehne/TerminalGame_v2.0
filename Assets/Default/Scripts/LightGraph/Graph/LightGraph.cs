@@ -17,9 +17,9 @@ public class LightGraph : GraphInteger<LightComponent>
     public const int maxBounces = 16;
 
     private LGUtilities LGUtilities;
-    public LogicGraph logicGraph;
+    public LogicChip logicGraph;
 
-    public LightGraph(LogicGraph logicGraph, int width, int height) {
+    public LightGraph(LogicChip logicGraph, int width, int height) {
         this.width = width;
         this.height = height;
         this.LGUtilities = new LGUtilities(this);
@@ -52,11 +52,11 @@ public class LightGraph : GraphInteger<LightComponent>
                 this.linkComponents.Add((LinkComponent)comp);
 
                 if (comp.GetType() == typeof(GraphInput)) {
-                    this.logicGraph.addReceiveBridge((ReceiveBridge)((GraphInput)comp).getExtensionConnection());
+                    this.logicGraph.addReceiveBridge(((GraphInput)comp).getExtensionConnection());
                     
 
                 } else if (comp.GetType() == typeof(GraphOutput)) {
-                    this.logicGraph.addSendBridge((SendBridge)((GraphOutput)comp).getExtensionConnection());
+                    this.logicGraph.addSendBridge(((GraphOutput)comp).getExtensionConnection());
 
                 } else {
                     throw new System.Exception(comp.GetType() + " can not be added to the Logic Graph the Bridge type is not supported");
@@ -103,20 +103,22 @@ public class LightGraph : GraphInteger<LightComponent>
 
                 if (component.GetType().IsSubclassOf(typeof(LogicComponent))) {
                     result = this.logicComponents.Remove((LogicComponent)component);
+
                 } else if (component.GetType().IsSubclassOf(typeof(PassiveComponent))) {
                     result = this.passiveComponents.Remove((PassiveComponent)component);
+
                 } else if (component.GetType().IsSubclassOf(typeof(LinkComponent))) {
+
+                    //ExtensionConnection[] 
                     if (component.GetType() == typeof(GraphInput)) {
 
                         GraphInput rec = (GraphInput)component;
-                        rec.getExtensionConnection().clearConnections();
-                        result = this.logicGraph.removeReceiveBridge((ReceiveBridge)rec.getExtensionConnection());
+                        result = this.logicGraph.removeReceiveBridge(rec.getExtensionConnection());
                         this.linkComponents.Remove(rec);
 
                     } else if (component.GetType() == typeof(GraphOutput)) {
                         GraphOutput send = (GraphOutput)component;
-                        send.getExtensionConnection().clearConnections();
-                        result = this.logicGraph.removeSendBridge((SendBridge)send.getExtensionConnection());
+                        result = this.logicGraph.removeSendBridge(send.getExtensionConnection());
                         this.linkComponents.Remove(send);
 
                     } else {

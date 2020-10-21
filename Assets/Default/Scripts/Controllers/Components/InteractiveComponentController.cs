@@ -71,7 +71,7 @@ public abstract class InteractiveComponentController : GraphComponentController 
         int state = -1;
 
         if (comp.GetType().IsSubclassOf(typeof(LinkComponent))) {
-            state = ((LinkComponent)comp).getExtensionConnection().State;
+            state = ((LinkComponent)comp).getExtensionConnection().Value;
         } else if(comp.GetType().IsSubclassOf(typeof(LogicComponent))) {
             state = ((LogicComponent)comp).getState();
         } else {

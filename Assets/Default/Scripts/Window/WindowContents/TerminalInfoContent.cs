@@ -60,7 +60,7 @@ public class TerminalInfoContent : WindowContent
         EnterTextContent content = new EnterTextContent("Give a unique name to the graph", (string enteredText) =>
         {
 
-            this.terminalController.Terminal.addExtension(new LogicGraph(100, 100, enteredText));
+            this.terminalController.Terminal.addExtension(new LogicChip(100, 100, enteredText));
             this.refreshExtensionList();
 
         }, () => { }, 50);
@@ -109,9 +109,9 @@ public class TerminalInfoContent : WindowContent
             graphButton.GetComponent<Button>().onClick.AddListener(() =>
             {
 
-                if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicGraph)) {
+                if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicChip)) {
 
-                    LogicGraph graph = (LogicGraph)this.terminalController.Terminal.extensionAt(index);
+                    LogicChip graph = (LogicChip)this.terminalController.Terminal.extensionAt(index);
                     LogicGraphContent lgContent = new LogicGraphContent(graph, terminalController.GraphManager);
                     Window win = new Window(graph.Name, 200, 200, lgContent);
 
@@ -123,9 +123,9 @@ public class TerminalInfoContent : WindowContent
             {
 
                 //removes the logic graph window
-                if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicGraph)) {
+                if (this.terminalController.Terminal.extensionAt(index).GetType() == typeof(LogicChip)) {
 
-                    LogicGraph graph = (LogicGraph)this.terminalController.Terminal.extensionAt(index);
+                    LogicChip graph = (LogicChip)this.terminalController.Terminal.extensionAt(index);
                     LogicGraphContent lgContent = new LogicGraphContent(graph, terminalController.GraphManager);
 
                     WindowController wc = WindowManager.Instance.getControllerByData(lgContent);

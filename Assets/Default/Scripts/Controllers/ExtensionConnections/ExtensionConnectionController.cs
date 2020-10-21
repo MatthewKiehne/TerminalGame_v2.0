@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
+using System.Xml.Linq;
 
-public class ExtensionConnectionController : MonoBehaviour {
+public class ExtensionConnectionController : MonoBehaviour
+{
 
     private Terminal terminal;
 
@@ -13,14 +16,14 @@ public class ExtensionConnectionController : MonoBehaviour {
     private Dropdown fromExtensionOptions;
     private TExtension fromExtensionSelect = null;
 
-    private Dropdown fromBridgeOptions;
-    private SendBridge fromBridgeSelect = null;
+    private Dropdown fromNodeOptions;
+    private ExtensionNode fromNodeSelect = null;
 
     private Dropdown toExtensionOptions;
     private TExtension toExtensionSelect = null;
 
-    private Dropdown toBridgeOptions;
-    private ReceiveBridge toBridgeSelect = null;
+    private Dropdown toNodeOptions;
+    private ExtensionNode toNodeSelect = null;
 
     private Button deleteButton;
     private Button confirmButton;
@@ -31,29 +34,32 @@ public class ExtensionConnectionController : MonoBehaviour {
 
     private bool connected = false;
 
+    /// <summary>
+    /// Sets up the controller for data input
+    /// </summary>
     public void setUp(Terminal terminal, TerminalConnectionsContent terminalConnectionContent) {
-        this.terminal = terminal;
-        this.terminalConnectionsContent = terminalConnectionContent;
-        this.findComponents();
-    }
-
-    public void setUp(Terminal terminal, TerminalConnectionsContent terminalConnectionContent,
-        TExtension fromExtension, SendBridge sendBridge, TExtension toExtension, ReceiveBridge receiveBridge) {
 
         this.terminal = terminal;
         this.terminalConnectionsContent = terminalConnectionContent;
-
         this.findComponents();
+
+        List<string> extensions = this.terminal.Extensions.Select( ext => { return ext.Name; }).Distinct().ToList();
+        this.fromExtensionOptions.AddOptions(extensions);
+        this.toExtensionOptions.AddOptions(extensions);
+
+
+
+        /*
 
         int fromExtensionIndex = this.terminal.extensionIndexOf(fromExtension);
-        int sendIndex = Array.IndexOf(fromExtension.SendBridges, sendBridge);
+        int sendIndex = Array.IndexOf(fromExtension.SendBridges, sendNode);
         int toExtensionIndex = this.terminal.extensionIndexOf(toExtension);
-        int receiveIndex = Array.IndexOf(toExtension.ReceiveBridges, receiveBridge);
+        int receiveIndex = Array.IndexOf(toExtension.ReceiveBridges, receiveNode);
 
         this.fromExtensionSelect = fromExtension;
-        this.fromBridgeSelect = sendBridge;
+        this.fromNodeSelect = sendNode;
         this.toExtensionSelect = toExtension;
-        this.toBridgeSelect = receiveBridge;
+        this.toNodeSelect = receiveNode;
 
         this.fromExtensionOptions.AddOptions(this.extensionList());
         this.fromExtensionOptions.value = fromExtensionIndex + 1;
@@ -66,10 +72,20 @@ public class ExtensionConnectionController : MonoBehaviour {
             this.connected = true;
             this.changeBackgroundColor();
         }
+        */
+
+    }
+
+    /// <summary>
+    /// Populates the controller with connection data
+    /// </summary>
+    /// <param name=""></param>
+    public void giveData(ExtensionConnection connection) {
+
     }
 
     private void findComponents() {
-        //finds all the components and adds functionality 
+        //finds all the components and adds functionality  
 
         this.basePanel = this.GetComponent<Image>();
 
@@ -77,37 +93,37 @@ public class ExtensionConnectionController : MonoBehaviour {
         Transform toDropdown = this.transform.Find("To").Find("Dropdowns");
 
         this.fromExtensionOptions = fromDropdown.Find("Extension").GetComponent<Dropdown>();
-        this.fromBridgeOptions = fromDropdown.Find("Bridge").GetComponent<Dropdown>();
+        this.fromNodeOptions = fromDropdown.Find("Bridge").GetComponent<Dropdown>();
         this.toExtensionOptions = toDropdown.Find("Extension").GetComponent<Dropdown>();
-        this.toBridgeOptions = toDropdown.Find("Bridge").GetComponent<Dropdown>();
+        this.toNodeOptions = toDropdown.Find("Bridge").GetComponent<Dropdown>();
 
         this.confirmButton = this.transform.Find("ConfirmButton").GetComponent<Button>();
         this.deleteButton = this.transform.Find("DeleteButton").GetComponent<Button>();
 
         fromExtensionOptions.ClearOptions();
-        fromBridgeOptions.ClearOptions();
+        fromNodeOptions.ClearOptions();
         toExtensionOptions.ClearOptions();
-        toBridgeOptions.ClearOptions();
+        toNodeOptions.ClearOptions();
 
         if (this.transform == null) {
 
             throw new Exception("the global variabl Terminal has to be set before the Start funciton is called");
         }
 
-        fromExtensionOptions.onValueChanged.AddListener(setFromExtension);
-        fromBridgeOptions.onValueChanged.AddListener(setSendBridge);
-        toExtensionOptions.onValueChanged.AddListener(setToExteinsion);
-        toBridgeOptions.onValueChanged.AddListener(setReceiveBridge);
+        //fromExtensionOptions.onValueChanged.AddListener(setFromExtension);
+        //fromBridgeOptions.onValueChanged.AddListener(setSendBridge);
+        //toExtensionOptions.onValueChanged.AddListener(setToExteinsion);
+        //toBridgeOptions.onValueChanged.AddListener(setReceiveBridge);
 
-        this.confirmButton.onClick.AddListener(onConfirmationClick);
-        this.deleteButton.onClick.AddListener(onDeletionClick);
+        //this.confirmButton.onClick.AddListener(onConfirmationClick);
+        //this.deleteButton.onClick.AddListener(onDeletionClick);
 
-        fromExtensionOptions.AddOptions(this.extensionList());
-        fromBridgeOptions.AddOptions(this.arrowList());
-        toExtensionOptions.AddOptions(this.extensionList());
-        toBridgeOptions.AddOptions(this.arrowList());
+        //fromExtensionOptions.AddOptions(this.extensionList());
+        //fromBridgeOptions.AddOptions(this.arrowList());
+        //toExtensionOptions.AddOptions(this.extensionList());
+        //toBridgeOptions.AddOptions(this.arrowList());
     }
-
+    /*
     private void setFromExtension(int value) {
 
         if (value == 0) {
@@ -120,7 +136,7 @@ public class ExtensionConnectionController : MonoBehaviour {
             this.fromBridgeOptions.ClearOptions();
             this.fromBridgeOptions.AddOptions(this.arrowList());
             this.fromBridgeOptions.value = 0;
-            this.fromBridgeSelect = null;
+            this.fromNodeSelect = null;
 
         } else {
 
@@ -141,7 +157,7 @@ public class ExtensionConnectionController : MonoBehaviour {
                 this.fromBridgeOptions.ClearOptions();
                 this.fromBridgeOptions.AddOptions(this.arrowList());
                 this.fromBridgeOptions.value = 0;
-                this.fromBridgeSelect = null;  
+                this.fromNodeSelect = null;  
             }
         }
     }
@@ -149,7 +165,7 @@ public class ExtensionConnectionController : MonoBehaviour {
     private void setSendBridge(int value) {
 
         if (value == 0) {
-            this.fromBridgeSelect = null;
+            this.fromNodeSelect = null;
 
             if (this.fromExtensionSelect != null) {
                 this.fromBridgeOptions.ClearOptions();
@@ -160,13 +176,13 @@ public class ExtensionConnectionController : MonoBehaviour {
 
             if (this.validFromBridge()) {
 
-                this.fromBridgeSelect = this.fromExtensionSelect.SendBridges[fromBridgeOptions.value - 1]; ;
+                this.fromNodeSelect = this.fromExtensionSelect.SendBridges[fromBridgeOptions.value - 1]; ;
 
             } else {
 
                 this.fromBridgeOptions.ClearOptions();
                 this.fromBridgeOptions.AddOptions(this.sendBridges(this.fromExtensionSelect));
-                this.fromBridgeSelect = null;
+                this.fromNodeSelect = null;
             }
         }
     }
@@ -183,7 +199,7 @@ public class ExtensionConnectionController : MonoBehaviour {
             this.toBridgeOptions.ClearOptions();
             this.toBridgeOptions.AddOptions(this.arrowList());
             this.toBridgeOptions.value = 0;
-            this.toBridgeSelect = null;
+            this.toNodeSelect = null;
 
         } else {
 
@@ -204,7 +220,7 @@ public class ExtensionConnectionController : MonoBehaviour {
                 this.toBridgeOptions.ClearOptions();
                 this.toBridgeOptions.AddOptions(this.arrowList());
                 this.toBridgeOptions.value = 0;
-                this.toBridgeSelect = null;
+                this.toNodeSelect = null;
             }
         }
     }
@@ -213,7 +229,7 @@ public class ExtensionConnectionController : MonoBehaviour {
 
         if (value == 0) {
             //does nothing
-            this.toBridgeSelect = null;
+            this.toNodeSelect = null;
 
             if (this.toExtensionSelect != null) {
                 this.toBridgeOptions.ClearOptions();
@@ -224,13 +240,13 @@ public class ExtensionConnectionController : MonoBehaviour {
 
             if (this.validToBridge()) {
 
-                this.toBridgeSelect = this.toExtensionSelect.ReceiveBridges[toBridgeOptions.value - 1]; ;
+                this.toNodeSelect = this.toExtensionSelect.ReceiveBridges[toBridgeOptions.value - 1]; ;
 
             } else {
 
                 this.toBridgeOptions.ClearOptions();
                 this.toBridgeOptions.AddOptions(this.receiveBridges(this.toExtensionSelect));
-                this.toBridgeSelect = null;
+                this.toNodeSelect = null;
             }
         }
     }
@@ -258,7 +274,7 @@ public class ExtensionConnectionController : MonoBehaviour {
 
         if (fromBridgeOptions.value - 1 < this.fromExtensionSelect.SendBridges.Length) {
 
-            SendBridge sendBridge = this.fromExtensionSelect.SendBridges[fromBridgeOptions.value - 1];
+            ExtensionNode sendBridge = this.fromExtensionSelect.SendBridges[fromBridgeOptions.value - 1];
 
             if (sendBridge.Name.Equals(this.fromBridgeOptions.options[this.fromBridgeOptions.value].text)) {
 
@@ -292,7 +308,7 @@ public class ExtensionConnectionController : MonoBehaviour {
 
         if (toBridgeOptions.value - 1 < this.toExtensionSelect.ReceiveBridges.Length) {
 
-            ReceiveBridge receiveBridge = this.toExtensionSelect.ReceiveBridges[toBridgeOptions.value - 1];
+            ExtensionNode receiveBridge = this.toExtensionSelect.ReceiveBridges[toBridgeOptions.value - 1];
 
             if (receiveBridge.Name.Equals(this.toBridgeOptions.options[this.toBridgeOptions.value].text)) {
                 result = true;
@@ -318,10 +334,10 @@ public class ExtensionConnectionController : MonoBehaviour {
         return found;
     }
 
-    private bool bridgeInExtension(ExtensionConnection bridge, TExtension ext) {
+    private bool bridgeInExtension(ExtensionNode bridge, TExtension ext) {
         bool found = false;
 
-        if(bridge.GetType() == typeof(SendBridge)) {
+        if(bridge.GetType() == typeof(ExtensionNode)) {
             found = Array.Exists(ext.SendBridges, b => b.Equals(bridge));
         } else {
             found = Array.Exists(ext.ReceiveBridges, b => b.Equals(bridge));
@@ -335,8 +351,8 @@ public class ExtensionConnectionController : MonoBehaviour {
 
         return this.validFromExtension() && this.validFromBridge() && 
             this.validToExtension() && this.validToBridge() &&
-            this.extensionInTerminal(this.fromExtensionSelect) && this.bridgeInExtension(this.fromBridgeSelect, this.fromExtensionSelect) &&
-            this.extensionInTerminal(this.toExtensionSelect) && this.bridgeInExtension(this.toBridgeSelect, this.toExtensionSelect);
+            this.extensionInTerminal(this.fromExtensionSelect) && this.bridgeInExtension(this.fromNodeSelect, this.fromExtensionSelect) &&
+            this.extensionInTerminal(this.toExtensionSelect) && this.bridgeInExtension(this.toNodeSelect, this.toExtensionSelect);
     }
 
     private void onConfirmationClick() {
@@ -346,8 +362,8 @@ public class ExtensionConnectionController : MonoBehaviour {
 
             this.connected = true;
 
-            this.fromBridgeSelect.ReceiveBridges.Add(this.toBridgeSelect);
-            this.toBridgeSelect.SendBridges.Add(this.fromBridgeSelect);
+            //this.fromNodeSelect.ReceiveBridges.Add(this.toNodeSelect);
+            //this.toBNodeSelect.SendBridges.Add(this.fromNodeSelect);
 
             this.changeBackgroundColor();
             
@@ -372,16 +388,16 @@ public class ExtensionConnectionController : MonoBehaviour {
         if (connected) {
 
             TExtension from = null;
-            SendBridge send = null;
+            ExtensionNode send = null;
 
             TExtension to = null;
-            ReceiveBridge rec = null;
+            ExtensionNode rec = null;
 
             try {
                 from = this.findExtensionByName(this.terminal, fromExtensionSelect.Name);
-                send = this.findSendBridgeByName(from.SendBridges, fromBridgeSelect.Name);
+                send = this.findSendBridgeByName(from.SendBridges, fromNodeSelect.Name);
                 to = this.findExtensionByName(this.terminal, toExtensionSelect.Name);
-                rec = this.findReceiveBridgeByName(to.ReceiveBridges, toBridgeSelect.Name);
+                rec = this.findReceiveBridgeByName(to.ReceiveBridges, toNodeSelect.Name);
 
             } catch (Exception ex) {
                 throw ex;
@@ -389,8 +405,8 @@ public class ExtensionConnectionController : MonoBehaviour {
 
             if (send != null && rec != null) {
 
-                bool one = send.ReceiveBridges.Remove(rec);
-                bool two = rec.SendBridges.Remove(send);
+                //bool one = send.ReceiveBridges.Remove(rec);
+                //bool two = rec.SendBridges.Remove(send);
 
             } else {
                 this.terminalConnectionsContent.onRefreshClick();
@@ -400,48 +416,24 @@ public class ExtensionConnectionController : MonoBehaviour {
         Destroy(this.gameObject);
     }
 
+
     private TExtension findExtensionByName(Terminal terminal, string name) {
 
-        TExtension result = null;
 
-        int counter = 0;
 
-        while (counter < terminal.extensionLength() && result == null) {
-
-            if (terminal.extensionAt(counter).Name.Equals(name)) {
-                result = terminal.extensionAt(counter);
-            }
-
-            counter++;
-        }
-
-        return result;
+        return Array.Find(terminal.Extensions, extension => extension.Name.Equals(name));
     }
 
+    
     private SendBridge findSendBridgeByName(SendBridge[] list, string name) {
 
-        SendBridge result = null;
-        int counter = 0;
-        while (counter < list.Length && result == null) {
-            if (list[counter].Name.Equals(name)) {
-                result = list[counter];
-            }
-            counter++;
-        }
-        return result;
+        return Array.Find(list, bridge => bridge.Name.Equals(name) );
     }
 
-    private ReceiveBridge findReceiveBridgeByName(ReceiveBridge[] list, string name) {
+    private ReceiveBridge findReceiveBridgeByName(ReceiveBridge[] list, string name) {  
 
-        ReceiveBridge result = null;
-        int counter = 0;
-        while (counter < list.Length && result == null) {
-            if (list[counter].Name.Equals(name)) {
-                result = list[counter];
-            }
-            counter++;
-        }
-        return result;
+
+        return Array.Find(list, bridge => bridge.Name.Equals(name)); ;
     }
 
     private List<string> selectList() {
@@ -481,5 +473,6 @@ public class ExtensionConnectionController : MonoBehaviour {
 
         return result;
     }
+*/
 
 }

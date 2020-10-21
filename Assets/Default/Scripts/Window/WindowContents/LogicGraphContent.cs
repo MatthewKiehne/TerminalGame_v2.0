@@ -13,7 +13,7 @@ public class LogicGraphContent : WindowContent {
     //manager and controller
     private LogicGraphManager logicGraphManager;
     private LogicGraphController logicGraphController;
-    private LogicGraph graph;
+    private LogicChip graph;
 
     //ui stuff
     private Camera camera;
@@ -32,7 +32,7 @@ public class LogicGraphContent : WindowContent {
     //the mouse objet
     private GameObject mouseObject = null;
 
-    public LogicGraphContent(LogicGraph graph, LogicGraphManager logicGraphManager) {
+    public LogicGraphContent(LogicChip graph, LogicGraphManager logicGraphManager) {
         this.logicGraphManager = logicGraphManager;
         this.graph = graph;
     }
@@ -172,11 +172,11 @@ public class LogicGraphContent : WindowContent {
             this.changeComponent();
         });
         sendBridgeButton.onClick.AddListener(() => {
-            this.component = new GraphOutput(this.previousGridPosition, this.rotation, this.flipped, new SendBridge("Blank"));
+            this.component = new GraphOutput(this.previousGridPosition, this.rotation, this.flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.SEND));
             this.changeComponent();
         });
         receiveBridgeButton.onClick.AddListener(() => {
-            this.component = new GraphInput(this.previousGridPosition, this.rotation, this.flipped, new ReceiveBridge("Blank"));
+            this.component = new GraphInput(this.previousGridPosition, this.rotation, this.flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.RECEIVE));
             this.changeComponent();
         });
 
@@ -286,9 +286,9 @@ public class LogicGraphContent : WindowContent {
                             bool result = true;
                             int counter = 0;
 
-                            List<ExtensionConnection> checkBridges = this.logicGraphController.Graph.AllBridges();
+                            ExtensionNode[] checkBridges = this.logicGraphController.Graph.AllBridges();
 
-                            while(result && counter < checkBridges.Count) {
+                            while(result && counter < checkBridges.Length) {
 
                                 if (value.Equals(checkBridges[counter].Name)) {
                                     result = false;
@@ -419,9 +419,9 @@ public class LogicGraphContent : WindowContent {
         } else if (type == typeof(Reflector)) {
             result = new Reflector(position, rotation, flipped);
         } else if (type == typeof(GraphOutput)) {
-            result = new GraphOutput(position, rotation, flipped, new SendBridge("Blank"));
+            result = new GraphOutput(position, rotation, flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.SEND));
         } else if (type == typeof(GraphInput)) {
-            result = new GraphInput(position, rotation, flipped, new ReceiveBridge("Blank"));
+            result = new GraphInput(position, rotation, flipped, new ExtensionNode("Blank", ExtensionNode.ExtensionState.RECEIVE));
         } else {
             throw new System.Exception(type + " was not found when selecting the from the logic graph editor");
         }

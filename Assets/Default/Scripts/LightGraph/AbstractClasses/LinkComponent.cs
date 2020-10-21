@@ -20,7 +20,7 @@ public abstract class LinkComponent : InteractiveComponent {
         return result;
     }
 
-    public abstract ExtensionConnection getExtensionConnection();
+    public abstract ExtensionNode getExtensionConnection();
 
     public abstract string getName();
 }

@@ -11,8 +11,9 @@ public class TExtensionConnectionsData
 
     public TExtensionConnectionsData(Terminal terminal) {
 
-        Dictionary<ReceiveBridge, TExtension> recDic = new Dictionary<ReceiveBridge, TExtension>();
+        Dictionary<ExtensionConnection, TExtension> recDic = new Dictionary<ExtensionConnection, TExtension>();
 
+        /*
         for (int i = 0; i < terminal.extensionLength(); i++) {
 
             TExtension ext = terminal.extensionAt(i);
@@ -41,6 +42,7 @@ public class TExtensionConnectionsData
                 }
             }
         }
+        */
     }
 
     /// <summary>
@@ -48,17 +50,20 @@ public class TExtensionConnectionsData
     /// </summary>
     public void buildConnections(Terminal terminal) {
 
+        /*
+
         foreach (BridgeComponentConnectionData connection in this.connections) {
 
             TExtension fromExtension = terminal.findExtension(connection.fromExtension);
-            SendBridge fromBridge = Array.Find(fromExtension.SendBridges, (x) => x.Name.Equals(connection.fromBridge));
+            ExtensionConnection fromNode = Array.Find(fromExtension.SendBridges, (x) => x.Name.Equals(connection.fromBridge));
             TExtension toExtension = terminal.findExtension(connection.toExtension);
-            ReceiveBridge toBridge = Array.Find(toExtension.ReceiveBridges, (x) => x.Name.Equals(connection.toBridge));
+            ExtensionConnection toNode = Array.Find(toExtension.ReceiveBridges, (x) => x.Name.Equals(connection.toBridge));
 
             if (fromExtension != null && fromBridge != null && toExtension != null && toBridge != null) {
                 fromBridge.ReceiveBridges.Add(toBridge);
                 toBridge.SendBridges.Add(fromBridge);
             }
         }
+        */
     }
 }

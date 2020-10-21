@@ -10,7 +10,7 @@ public class LogicGraphCameraController : MonoBehaviour {
     // Start is called before the first frame update
 
 
-    private LogicGraph graph;
+    private LogicChip graph;
     private Vector3 offset;
 
     private readonly float speed = 5f;
@@ -26,7 +26,7 @@ public class LogicGraphCameraController : MonoBehaviour {
     private InputActions input;
     private RawImage rawImage;
 
-    public void setUp(Vector3 offset, LogicGraph graph, InputActions input, RawImage image) {
+    public void setUp(Vector3 offset, LogicChip graph, InputActions input, RawImage image) {
         //sets up the camera controller
 
         this.graph = graph;
