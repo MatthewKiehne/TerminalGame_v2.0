@@ -1,0 +1,24 @@
+{
+  "Mods": [
+    {
+      "Path": "Test.cs",
+      "Requires": [
+        {
+          "Name": "LogicComponent",
+          "Type": {
+            "Mod": "ModName",
+            "Script": "Script Name"
+          }
+        },
+        {
+          "Name": "LogicComponent",
+          "Type": "Script"
+        },
+        {
+          "Name": "System",
+          "Type": "Type"
+        }
+      ]
+    }
+  ]
+}

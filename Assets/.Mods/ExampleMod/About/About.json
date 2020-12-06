@@ -1,0 +1,16 @@
+{
+  "ModName": "Example Mod",
+  "Version": "1.0.0",
+  "Contributors": [
+    {
+      "Name": "Matthew Kiehne",
+      "Posistion": "Thinker"
+    }
+  ],
+  "RequiredMods": [
+    {
+      "ModName": "OtherModName",
+      "Version": "1.0.0"
+    }
+  ]
+}
