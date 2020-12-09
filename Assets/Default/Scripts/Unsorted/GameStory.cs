@@ -6,6 +6,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public class GameStory {
 
@@ -26,7 +27,7 @@ public class GameStory {
 
 
         if (scriptsPath != null) {
-            this.loadAllScripts(scriptsPath);
+            this.loadAllScripts(scriptsPath, "testName");
         }
     }
 
@@ -34,7 +35,7 @@ public class GameStory {
     /// Reads all the 
     /// </summary>
     /// <param name="path"></param>
-    private void loadAllScripts(string path) {
+    private void loadAllScripts(string path, string modName) {
 
         string[] files = Directory.GetFiles(path);
         string modOrderFile = Array.Find(files, element => element.EndsWith("ModLoadOrder.json"));
@@ -42,8 +43,36 @@ public class GameStory {
         if(modOrderFile != null) {
             string json = File.ReadAllText(modOrderFile);
             JToken root = JObject.Parse(json);
-            Debug.Log(root);
-            Debug.Log(new JArray(root).Count);
+            JToken[] modArray = root.SelectToken("Mods").ToArray();
+
+            foreach(JToken mod in modArray) {
+
+                string scriptPath = mod.SelectToken("Path").ToString();
+                JToken[] requiredArray = mod.SelectToken("Requires").ToArray();
+
+                foreach(JToken require in requiredArray) {
+
+                    string requiredName = require.SelectToken("Name").ToString();
+                    JToken requireType = require.SelectToken("Type");
+
+                    if(requireType.Children().ToArray().Length != 0) {
+
+                        string requiredMod = requireType.SelectToken("Mod").ToString();
+                        string requiredScript = requireType.SelectToken("Script").ToString();
+
+                    } else {
+                        string t = requireType.ToString();
+
+                        if (t.Equals("Script")) {
+
+                        } else if (t.Equals("Type")) {
+
+                        } else {
+                            throw new Exception("TypeNotSupported: in script: " + scriptPath + " type " + t + " is not supported");
+                        }
+                    }
+                }
+            }
         }
     }
 

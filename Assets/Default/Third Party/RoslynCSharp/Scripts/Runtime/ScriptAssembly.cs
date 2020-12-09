@@ -148,7 +148,7 @@ namespace RoslynCSharp
         }
 
         // Constructor
-        public ScriptAssembly(ScriptDomain domain, Assembly rawAssembly, CompilationResult compileResult = null)
+        internal ScriptAssembly(ScriptDomain domain, Assembly rawAssembly, CompilationResult compileResult = null)
         {
             this.domain = domain;
             this.rawAssembly = rawAssembly;

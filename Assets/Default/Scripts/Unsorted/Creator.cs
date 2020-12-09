@@ -15,12 +15,15 @@ public class Creator {
         if( I != null) {
             throw new System.Exception("An instance of Creator has already been made");
         }
-
     }
 
     public void load(string path) {
         //dom.RoslynCompilerService.ReferenceAssemblies.Add()
         //AssemblyReference.FromAssembly()
         ScriptAssembly scrAss = dom.CompileAndLoadFile(path);
+    }
+
+    public void compile(string cSharpScript) {
+        dom.RoslynCompilerService.CompileFromSource(cSharpScript);
     }
 }
