@@ -14,9 +14,16 @@ public class TempSceneInit : MonoBehaviour {
 
     void Start() {
 
-        //Creator.I.load("");
-        GameStory story = new GameStory();
-        story.loadMod("C:\\Users\\New_User\\Documents\\Unity Programs\\TerminalGame_v2.0\\Assets\\.Mods\\ExampleMod");
+        string t = File.ReadAllText("C:/Users/New_User/Desktop/test.txt");
+        Debug.Log(t);
+
+        string path = Application.persistentDataPath + "/Stories/MyStory";
+
+        Debug.Log(path);
+        string[] mods = { "C:\\Users\\New_User\\AppData\\LocalLow\\MyCompany\\Logic Gate Simulator\\Mods\\ExampleMod" };
+        GameStory.CreateNewStory(path, mods);
+
+        //story.loadMod("C:\\Users\\New_User\\Documents\\Unity Programs\\TerminalGame_v2.0\\Assets\\.Mods\\ExampleMod");
 
         //reads the game objects into memory
         TextAsset text = Resources.Load<TextAsset>("Default/Text/InitSceneLoad/GameScene");
