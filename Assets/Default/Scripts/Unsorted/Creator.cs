@@ -112,7 +112,20 @@ public class Creator {
         this.scripts[modName].Add(scriptName, scriptAssembly);
     }
 
-    public void compile(string cSharpScript) {
-        dom.RoslynCompilerService.CompileFromSource(cSharpScript);
+    /// <summary>
+    /// Compiles the cSharpScript and returns the CompilationResult of the compisition. See "setCompileOutput" to change the output directory for the assembly file
+    /// </summary>
+    /// <param name="cSharpScript"></param>
+    /// <returns> Returns the CompilationResult of the assembly</returns>
+    public CompilationResult compile(string cSharpScript) {
+         return dom.RoslynCompilerService.CompileFromSource(cSharpScript);
+    }
+
+    /// <summary>
+    /// Changes the output directory to the path given in
+    /// </summary>
+    /// <param name="path">The path where you want the scripts to be compiled at</param>
+    public void SetCompileOutput(string path) {
+        dom.RoslynCompilerService.OutputDirectory = path;
     }
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using RoslynCSharp.Compiler;
 
 public enum InitStoryType { LoadStory, CreateNewStory}
 
@@ -51,36 +52,64 @@ public class GameStory {
                 if (Directory.Exists(modAboutFolderPath)) {
                     
                     string modAboutFilePath = modAboutFolderPath + "\\About.json";
-                    Debug.Log(Directory.GetFiles(modAboutFolderPath)[0]);
-
-                    //string text = File.ReadAllText(modAboutFolderPath);
-
-                    //Debug.Log(text);
 
                     if (File.Exists(modAboutFilePath)) {
 
-                        Debug.Log(File.GetAttributes(Directory.GetFiles(modAboutFolderPath)[0]));
-                        //FileStream stream = new FileStream(Directory.GetFiles(modAboutFolderPath)[0], FileMode.Open);
                         string text = File.ReadAllText(modAboutFilePath);
                         JToken root = JToken.Parse(text);
                         string modName = root.SelectToken("ModName").ToString();
-                        Debug.Log(modName);
 
                         string currentModsFolder = modsFolder + "\\" + modName;
                         Directory.CreateDirectory(currentModsFolder);
 
-                        string compiledScriptsFolder = currentModsFolder + "\\Compiled Scripts";
-                        Directory.CreateDirectory(compiledScriptsFolder);
+                        //compile mods
+                        if(Directory.Exists(mod + "\\Scripts")) {
 
+                            string compiledScriptsFolder = currentModsFolder + "\\Compiled Scripts";
+                            Directory.CreateDirectory(compiledScriptsFolder);
+                            Creator.I.SetCompileOutput(compiledScriptsFolder);
 
-                        
-                        
-                        
-                        /*
-                        JToken root = JObject.Parse(aboutFileText);
-                        string modName = root.SelectToken("ModName").ToString();
-                        Debug.Log(modName);
-                        */
+                            JToken ScriptsRoot = JToken.Parse(File.ReadAllText(mod + "\\Scripts\\ModLoadOrder.json"));
+                            JToken[] scriptsArray = ScriptsRoot.SelectToken("Scripts").Children().ToArray();
+
+                            foreach(JToken singleScript in scriptsArray) {
+                                
+                                string scriptPath = singleScript.SelectToken("ScriptPath").ToString();
+
+                                string fullScriptPath = mod + "\\" + scriptPath;
+
+                                if (File.Exists(fullScriptPath)) {
+
+                                    JToken[] requiresArray = singleScript.SelectToken("Requires").Children().ToArray();
+
+                                    bool foundAllRequired = Helper.foundAllScriptRequirements(requiresArray, modName, scriptPath);
+
+                                    if (foundAllRequired) {
+
+                                        string allText = File.ReadAllText(fullScriptPath);
+                                        CompilationResult result =  Creator.I.compile(allText);
+                                        //result.OutputFile
+
+                                        string[] linkParts = scriptPath.Split(new char[] { '\\' });
+                                        string[] fileParts = linkParts[linkParts.Length - 1].Split(new char[] { '.' });
+                                        string newFileName = compiledScriptsFolder + "\\" + fileParts[0] + ".dll";
+                                        Debug.Log(newFileName);
+                                        string assemblyFilePath = result.OutputFile;
+
+                                        File.Move(assemblyFilePath, newFileName);
+
+                                        if(File.Exists(assemblyFilePath + ".pdb")) {
+                                            File.Delete(assemblyFilePath + ".pdb");
+                                        }
+
+                                    } else {
+                                        throw new Exception("Not all the requirements have been met to compile " + scriptPath + " in " + modName);
+                                    }
+                                } else {
+                                    throw new Exception("ScriptPathNotFound: Could not find script on path " + scriptPath);
+                                }
+                            }
+                        }
 
                     } else {
                         throw new Exception("AboutFileNotFound: About.json could not be found at " + modAboutFilePath);
@@ -93,6 +122,8 @@ public class GameStory {
             }
         }
     }
+
+
 
     /// <summary>
     /// Will attempt to load a 
@@ -137,35 +168,7 @@ public class GameStory {
                 string scriptPath = script.SelectToken("ScriptPath").ToString();
                 JToken[] requiredArray = script.SelectToken("Requires").ToArray();
 
-                bool foundRequired = true;
-                int requireCounter = 0;
-
-                while(foundRequired && requireCounter < requiredArray.Length) {
-
-                    string requiredName = requiredArray[requireCounter].SelectToken("RequiredName").ToString();
-                    string requireType = requiredArray[requireCounter].SelectToken("RequiredType").ToString();
-
-                    if (requireType.Equals("Mod")) {
-
-                        string requiredModName = requiredArray[requireCounter].SelectToken("ModName").ToString();
-                        foundRequired = Creator.I.isLoaded(requiredModName, requiredName);
-
-                    } else if (requireType.Equals("Script")) {
-
-                        foundRequired = Creator.I.isLoaded(modName, requiredName);
-
-                    } else if (requireType.Equals("Type")) {
-                        foundRequired = Creator.I.isLoaded(Type.GetType(requiredName));
-                    } else {
-                        throw new Exception("InvalidRequireType: " + scriptPath + " in " + modName + " has an invalid RequiredType of " + requireType);
-                    }
-
-                    if (!foundRequired) {
-                        throw new Exception("InvalidRequire: " + scriptPath + " in " + modName + " has failed to require" + requiredName);
-                    }
-
-                    requireCounter++;
-                }
+                
             }
         }
     }
@@ -176,5 +179,61 @@ public class GameStory {
 
     public static GameStory LoadStoryFromFile(string path) {
         return null;
+    }
+
+    /// <summary>
+    /// A helper class so functionality can be used between the static and non-static methods
+    /// </summary>
+    private class Helper
+    {
+
+        /// <summary>
+        /// Returns if all the requirements components have been loaded into the Creator. Adds all the Type components to the Creator
+        /// </summary>
+        /// <param name="requiredArray"> A JToken Array of all the required components</param>
+        /// <param name="modName"> The name of the mod this script is under </param>
+        /// <param name="scriptPath"> the path the script is located at under the root folder </param>
+        /// <returns> Returns if all the required components have been loaded into the Creator</returns>
+        public static bool foundAllScriptRequirements(JToken[] requiredArray, string modName, string scriptPath) {
+
+            bool foundRequired = true;
+            int requireCounter = 0;
+
+            while (foundRequired && requireCounter < requiredArray.Length) {
+
+                string requiredName = requiredArray[requireCounter].SelectToken("RequiredName").ToString();
+                string requireType = requiredArray[requireCounter].SelectToken("RequiredType").ToString();
+
+                if (requireType.Equals("Mod")) {
+
+                    string requiredModName = requiredArray[requireCounter].SelectToken("ModName").ToString();
+                    foundRequired = Creator.I.isLoaded(requiredModName, requiredName);
+
+                } else if (requireType.Equals("Script")) {
+
+                    foundRequired = Creator.I.isLoaded(modName, requiredName);
+
+                } else if (requireType.Equals("Type")) {
+
+                    Type t = Type.GetType(requiredName);
+                    bool currentlyIn = Creator.I.isLoaded(t);
+                    if (!currentlyIn) {
+                        Creator.I.load(t);
+                    }
+                    foundRequired = Creator.I.isLoaded(t);
+
+                } else {
+                    throw new Exception("InvalidRequireType: " + scriptPath + " in " + modName + " has an invalid RequiredType of " + requireType);
+                }
+
+                if (!foundRequired) {
+                    throw new Exception("InvalidRequire: " + scriptPath + " in " + modName + " has failed to require" + requiredName);
+                }
+
+                requireCounter++;
+            }
+
+            return foundRequired;
+        }
     }
 }
