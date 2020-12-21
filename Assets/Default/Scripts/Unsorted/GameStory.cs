@@ -9,9 +9,10 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using RoslynCSharp.Compiler;
 
-public enum InitStoryType { LoadStory, CreateNewStory}
+public enum InitStoryType { LoadStory, CreateNewStory }
 
-public class GameStory {
+public class GameStory
+{
 
 
     /// <summary>
@@ -21,7 +22,7 @@ public class GameStory {
     /// <param name="path"></param>
     public GameStory(string path) {
 
-        this.loadStory(path);
+
     }
 
     /// <summary>
@@ -37,103 +38,58 @@ public class GameStory {
         Directory.CreateDirectory(destinationPath);
 
         string[] rootFolders = { "/Mods", "/About", "/Saves" };
-        foreach(string folder in rootFolders) {
+        foreach (string folder in rootFolders) {
             Directory.CreateDirectory(destinationPath + folder);
         }
+
+        //make the mod load order
+        JObject modLoadOrder = new JObject();
+        JArray order = (JArray)modLoadOrder["order"];
+        JArray array = new JArray();
 
         string modsFolder = destinationPath + "/Mods";
 
         foreach (string mod in allModsPaths) {
 
-            if (Directory.Exists(mod)) {
+            string modAboutFolderPath = mod + "\\About";
+            string modAboutFilePath = modAboutFolderPath + "\\About.json";
 
-                string modAboutFolderPath = mod + "\\About";
-
-                if (Directory.Exists(modAboutFolderPath)) {
-                    
-                    string modAboutFilePath = modAboutFolderPath + "\\About.json";
-
-                    if (File.Exists(modAboutFilePath)) {
-
-                        string text = File.ReadAllText(modAboutFilePath);
-                        JToken root = JToken.Parse(text);
-                        string modName = root.SelectToken("ModName").ToString();
-
-                        string currentModsFolder = modsFolder + "\\" + modName;
-                        Directory.CreateDirectory(currentModsFolder);
-
-                        //compile mods
-                        if(Directory.Exists(mod + "\\Scripts")) {
-
-                            string compiledScriptsFolder = currentModsFolder + "\\Compiled Scripts";
-                            Directory.CreateDirectory(compiledScriptsFolder);
-                            Creator.I.SetCompileOutput(compiledScriptsFolder);
-
-                            JToken ScriptsRoot = JToken.Parse(File.ReadAllText(mod + "\\Scripts\\ModLoadOrder.json"));
-                            JToken[] scriptsArray = ScriptsRoot.SelectToken("Scripts").Children().ToArray();
-
-                            foreach(JToken singleScript in scriptsArray) {
-                                
-                                string scriptPath = singleScript.SelectToken("ScriptPath").ToString();
-
-                                string fullScriptPath = mod + "\\" + scriptPath;
-
-                                if (File.Exists(fullScriptPath)) {
-
-                                    JToken[] requiresArray = singleScript.SelectToken("Requires").Children().ToArray();
-
-                                    bool foundAllRequired = Helper.foundAllScriptRequirements(requiresArray, modName, scriptPath);
-
-                                    if (foundAllRequired) {
-
-                                        string allText = File.ReadAllText(fullScriptPath);
-                                        CompilationResult result =  Creator.I.compile(allText);
-                                        //result.OutputFile
-
-                                        string[] linkParts = scriptPath.Split(new char[] { '\\' });
-                                        string[] fileParts = linkParts[linkParts.Length - 1].Split(new char[] { '.' });
-                                        string newFileName = compiledScriptsFolder + "\\" + fileParts[0] + ".dll";
-                                        Debug.Log(newFileName);
-                                        string assemblyFilePath = result.OutputFile;
-
-                                        File.Move(assemblyFilePath, newFileName);
-
-                                        if(File.Exists(assemblyFilePath + ".pdb")) {
-                                            File.Delete(assemblyFilePath + ".pdb");
-                                        }
-
-                                    } else {
-                                        throw new Exception("Not all the requirements have been met to compile " + scriptPath + " in " + modName);
-                                    }
-                                } else {
-                                    throw new Exception("ScriptPathNotFound: Could not find script on path " + scriptPath);
-                                }
-                            }
-                        }
-
-                    } else {
-                        throw new Exception("AboutFileNotFound: About.json could not be found at " + modAboutFilePath);
-                    }
-                } else {
-                    throw new Exception("AboutFolderNotFound: about folder was not found at " + modAboutFolderPath);
-                }
-            } else {
+            if (!Directory.Exists(mod)) {
                 throw new Exception("LoadModError: " + mod + " could not be found");
             }
+            if (!Directory.Exists(modAboutFolderPath)) {
+                throw new Exception("AboutFolderNotFound: about folder was not found at " + modAboutFolderPath);
+            }
+            if (!File.Exists(modAboutFilePath)) {
+                throw new Exception("AboutFileNotFound: About.json could not be found at " + modAboutFilePath);
+            }
+
+            string text = File.ReadAllText(modAboutFilePath);
+            JToken root = JToken.Parse(text);
+            string modName = root.SelectToken("ModName").ToString();
+            string modVersion = root.SelectToken("Version").ToString();
+
+            string currentModsFolder = modsFolder + "\\" + modName;
+            Directory.CreateDirectory(currentModsFolder);
+
+            JObject modInfo = new JObject();
+            modInfo["Name"] = modName;
+            modInfo["ModVersion"] = modVersion;
+
+            array.Add(modInfo);
+
+            //compile mods
+            if (Directory.Exists(mod + "\\Scripts")) {
+                Helper.compileScriptsInMod(mod,modName, currentModsFolder);
+            }
         }
+
+        JObject obj = new JObject();
+        obj["array"] = array;
+
+        Debug.Log(obj.ToString());
+        File.WriteAllText(modsFolder + "\\modLoadOrder.json", obj.ToString());
     }
-
-
-
-    /// <summary>
-    /// Will attempt to load a 
-    /// </summary>
-    /// <param name="path"></param>
-    private void loadStory(string path) {
-
-    }
-
-
 
     public void loadMod(string path) {
 
@@ -157,18 +113,18 @@ public class GameStory {
 
         string[] files = Directory.GetFiles(path);
         string modOrderFile = Array.Find(files, element => element.EndsWith("ModLoadOrder.json"));
-        
-        if(modOrderFile != null) {
+
+        if (modOrderFile != null) {
             string json = File.ReadAllText(modOrderFile);
             JToken root = JObject.Parse(json);
             JToken[] scriptArray = root.SelectToken("Scripts").ToArray();
 
-            foreach(JToken script in scriptArray) {
+            foreach (JToken script in scriptArray) {
 
                 string scriptPath = script.SelectToken("ScriptPath").ToString();
                 JToken[] requiredArray = script.SelectToken("Requires").ToArray();
 
-                
+
             }
         }
     }
@@ -234,6 +190,61 @@ public class GameStory {
             }
 
             return foundRequired;
+        }
+
+        public static void compileScriptsInMod(string modPath, string modName, string destinationFolder) {
+
+            string compiledScriptsFolder = destinationFolder + "\\Compiled Scripts";
+            Directory.CreateDirectory(compiledScriptsFolder);
+            Creator.I.SetCompileOutput(compiledScriptsFolder);
+
+            string modLoadOrderPath = modPath + "\\Scripts\\ModLoadOrder.json";
+
+            JToken ScriptsRoot = JToken.Parse(File.ReadAllText(modLoadOrderPath));
+            JToken[] scriptsArray = ScriptsRoot.SelectToken("Scripts").Children().ToArray();
+
+            foreach (JToken singleScript in scriptsArray) {
+
+                string scriptPath = singleScript.SelectToken("ScriptPath").ToString();
+                string fullScriptPath = modPath + "\\" + scriptPath;
+
+                if (!File.Exists(fullScriptPath)) {
+                    throw new Exception("ScriptPathNotFound: Could not find script on path " + scriptPath);
+                }
+
+                JToken[] requiresArray = singleScript.SelectToken("Requires").Children().ToArray();
+                bool foundAllRequired = Helper.foundAllScriptRequirements(requiresArray, modName, scriptPath);
+
+                if (!foundAllRequired) {
+                    throw new Exception("Not all the requirements have been met to compile " + scriptPath + " in " + modName);
+                }
+
+                string allText = File.ReadAllText(fullScriptPath);
+                CompilationResult result = Creator.I.compile(allText);
+                //result.OutputFile
+
+                if (result.Errors.Length != 0) {
+                    string errorMessage = "";
+                    for (int i = 0; i < result.Errors.Length; i++) {
+                        errorMessage += i + ". " + result.Errors[i].Message + "\n";
+                    }
+                    Debug.Log(errorMessage);
+
+                    throw new Exception("FailedToCompile: See errors below for more detail\n" + errorMessage);
+                }
+
+                string[] linkParts = scriptPath.Split(new char[] { '\\' });
+                string[] fileParts = linkParts[linkParts.Length - 1].Split(new char[] { '.' });
+                string newFileName = compiledScriptsFolder + "\\" + fileParts[0] + ".dll";
+                Debug.Log(newFileName);
+                string assemblyFilePath = result.OutputFile;
+
+                File.Move(assemblyFilePath, newFileName);
+
+                if (File.Exists(assemblyFilePath + ".pdb")) {
+                    File.Delete(assemblyFilePath + ".pdb");
+                }
+            }
         }
     }
 }

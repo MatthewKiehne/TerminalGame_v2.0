@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using RoslynCSharp;
+using RoslynCSharp.Compiler;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -13,6 +17,23 @@ public class TempSceneInit : MonoBehaviour {
     private Sprite logicGraphControls;
 
     void Start() {
+/*
+        ScriptDomain dom = ScriptDomain.CreateDomain("test domain");
+        dom.RoslynCompilerService.OutputDirectory = "C:\\Users\\New_User\\Desktop";
+
+        //dom.RoslynCompilerService.ReferenceAssemblies.Add(AssemblyReference.FromAssembly(Assembly.GetAssembly(typeof(TestAbstractClass))));
+
+        CompilationResult res = dom.RoslynCompilerService.CompileFromFile("C:\\Users\\New_User\\Desktop\\TestChildClass.cs");
+        string compilationPath = res.OutputFile;
+        Debug.Log(res.Errors);
+
+
+        ScriptDomain newDom = ScriptDomain.CreateDomain("new domain");
+
+        ScriptAssembly ass = newDom.LoadAssembly(res.OutputAssemblyImage);
+        Debug.Log(ass);
+        //TestAbstractClass child =  (TestAbstractClass)ass.MainType.CreateRawInstance();
+*/
 
         string t = File.ReadAllText("C:/Users/New_User/Desktop/test.txt");
         Debug.Log(t);
@@ -56,8 +77,6 @@ public class TempSceneInit : MonoBehaviour {
             LogicChip tempEmptyGraph = new LogicChip(500, 500, "Graph No." + (i + 1));
             emptyTerminal.addExtension(tempEmptyGraph);
         }
-
-        //emptyTerminal.addExtension(new TInput("H"));
 
         List<Terminal> terms = new List<Terminal>();
         terms.Add(firstTerminal);
